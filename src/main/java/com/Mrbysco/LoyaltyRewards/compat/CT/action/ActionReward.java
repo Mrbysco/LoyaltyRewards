@@ -1,6 +1,5 @@
 package com.Mrbysco.LoyaltyRewards.compat.CT.action;
 
-import com.Mrbysco.LoyaltyRewards.utils.TimeHelper;
 import com.Mrbysco.LoyaltyRewards.utils.list.RewardList;
 
 import crafttweaker.IAction;
@@ -62,15 +61,15 @@ public class ActionReward implements IAction {
 			{
 				if(!this.rewardItem.isEmpty() && !command.isEmpty())
 				{
-					RewardList.addRewardInfo(this.uniqueName, rewardItem, command, TimeHelper.getProperTime(time, amount));
+					RewardList.addRewardInfo(this.uniqueName, rewardItem, command, time, amount);
 				}
 				else if(!this.rewardItem.isEmpty() && command.isEmpty())
 				{
-					RewardList.addRewardInfo(this.uniqueName, rewardItem, TimeHelper.getProperTime(time, amount));
+					RewardList.addRewardInfo(this.uniqueName, rewardItem, time, amount);
 				}
 				else if(this.rewardItem.isEmpty() && !command.isEmpty())
 				{
-					RewardList.addRewardInfo(this.uniqueName, command, TimeHelper.getProperTime(time, amount));
+					RewardList.addRewardInfo(this.uniqueName, command, time, amount);
 				}
 			}
 		}
@@ -79,8 +78,8 @@ public class ActionReward implements IAction {
 	@Override
 	public String describe() {
 		if (this.removal)
-			return String.format("Reward: " + this.uniqueName + " has been removed");	
+			return String.format("Reward for " + this.time + " " + this.amount + ": " + this.uniqueName + " has been removed");	
 		else
-			return String.format("Reward: " + this.uniqueName + " has been added");	
+			return String.format("Reward for " + this.time + " " + this.amount + ": " + this.uniqueName + " has been added");	
 	}
 }

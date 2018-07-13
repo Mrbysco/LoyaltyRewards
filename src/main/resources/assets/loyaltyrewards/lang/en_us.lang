@@ -1,2 +1,6 @@
+#Config
+loyaltyrewards.config.title=Loyalty Rewards Config
+
 #Text
-LoyaltyRewards.inventory.full=Inventory is full, reward was dropped near you.
+loyaltyrewards.rewarded.message=You have been rewarded for playing %d %s
+loyaltyrewards.inventory.full=Inventory is full, reward was dropped near you.

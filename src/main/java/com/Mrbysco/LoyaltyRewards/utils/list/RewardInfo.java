@@ -7,26 +7,30 @@ public class RewardInfo {
 	private ItemStack rewardItem;
 	private String command;
 	private int time;
+	private String amount;
 	
-	public RewardInfo(String name, ItemStack stack, String Command, int time) {
+	public RewardInfo(String name, ItemStack stack, String Command, int time, String amount) {
 		this.uniqueName = name;
 		this.rewardItem = stack;
 		this.command = Command;
 		this.time = time;
+		this.amount = amount;
 	}
 	
-	public RewardInfo(String name, String Command, int time) {
+	public RewardInfo(String name, String Command, int time, String amount) {
 		this.uniqueName = name;
 		this.rewardItem = ItemStack.EMPTY;
 		this.command = Command;
 		this.time = time;
+		this.amount = amount;
 	}
 	
-	public RewardInfo(String name, ItemStack stack, int time) {
+	public RewardInfo(String name, ItemStack stack, int time, String amount) {
 		this.uniqueName = name;
 		this.rewardItem = stack;
 		this.command = "";
 		this.time = time;
+		this.amount = amount;
 	}
 	
 	public ItemStack getReward() {
@@ -43,5 +47,9 @@ public class RewardInfo {
 	
 	public String getUniqueName() {
 		return uniqueName;
+	}
+	
+	public String getAmount() {
+		return amount;
 	}
 }

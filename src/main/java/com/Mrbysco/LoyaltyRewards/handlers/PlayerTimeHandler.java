@@ -1,6 +1,8 @@
 package com.Mrbysco.LoyaltyRewards.handlers;
 
 import com.Mrbysco.LoyaltyRewards.Reference;
+import com.Mrbysco.LoyaltyRewards.config.LoyaltyRewardConfigGen;
+import com.Mrbysco.LoyaltyRewards.utils.TimeHelper;
 import com.Mrbysco.LoyaltyRewards.utils.list.RewardInfo;
 import com.Mrbysco.LoyaltyRewards.utils.list.RewardList;
 
@@ -70,13 +72,13 @@ public class PlayerTimeHandler {
 		{
 			for(RewardInfo reward: RewardList.rewardList)
 	        {
-	        	if(time > reward.getTime())
+				int ProperTime = TimeHelper.getProperTime(reward.getTime(), reward.getAmount());
+	        	if(time > ProperTime)
 	        	{	
-	        		System.out.println(String.valueOf(time > reward.getTime()) + " " + reward.getUniqueName());
 	        		NBTTagCompound data = player.getEntityData();
 	        		boolean hasReward = data.getBoolean("loyaltyrewards:reward" + reward.getUniqueName() + "Given");
 	        		
-	        		if(player != null && !player.world.isRemote)
+	        		if(player != null && !player.world.isRemote && !hasReward)
 	        		{
 	        			ItemStack stack = reward.getReward().copy();
 	        			String command = String.valueOf(reward.getCommand());
@@ -85,16 +87,19 @@ public class PlayerTimeHandler {
 	    				{
 	        				dropItem(player, stack);
 	        				executeCommand(player, command);
+	        				sendRewardMessage(player, reward.getTime(), reward.getAmount());
 	        				data.setBoolean("inventory.full" + reward.getUniqueName() + "Given", true);
 	    				}
 	    				else if(!stack.isEmpty() && command.isEmpty())
 	    				{
 	        				dropItem(player, stack);
+	        				sendRewardMessage(player, reward.getTime(), reward.getAmount());
 	        				data.setBoolean("inventory.full" + reward.getUniqueName() + "Given", true);
 	    				}
 	    				else if(stack.isEmpty() && !command.isEmpty())
 	    				{
 	    					executeCommand(player, command);
+	        				sendRewardMessage(player, reward.getTime(), reward.getAmount());
 	    					data.setBoolean("inventory.full" + reward.getUniqueName() + "Given", true);
 	    				}
 	        		}
@@ -111,7 +116,9 @@ public class PlayerTimeHandler {
         }
 		else
 		{
-			player.sendMessage(new TextComponentTranslation(TextFormatting.YELLOW + Reference.MOD_PREFIX + "inventory.full"));
+			TextComponentTranslation text = new TextComponentTranslation("loyaltyrewards.inventory.full");
+			text.getStyle().setColor(TextFormatting.YELLOW);
+			player.sendMessage(text);
 			player.dropItem(stack, false);
 		}
 	}
@@ -128,9 +135,51 @@ public class PlayerTimeHandler {
 		else if(rawCommand.contains("@PLAYER"))
 		{
 			rawCommand = command.replace("@PLAYER", player.getName());
-			System.out.println(rawCommand);
 		}
 		
 		server.commandManager.executeCommand(server, rawCommand);
+	}
+	
+	public void sendRewardMessage(EntityPlayerMP player, int time, String amount)
+	{
+		String minuteAmount = "";
+		if(amount.contains("sec"))
+		{
+			if(time > 1)
+			{
+				minuteAmount = "seconds";
+			}
+			else
+			{
+				minuteAmount = "second";
+			}
+		}
+		if(amount.contains("min"))
+		{
+			if(time > 1)
+			{
+				minuteAmount = "minutes";
+			}
+			else
+			{
+				minuteAmount = "minute";
+			}
+		}
+		if(amount.contains("hour"))
+		{
+			if(time > 1)
+			{
+				minuteAmount = "hours";
+			}
+			else
+			{
+				minuteAmount = "hour";
+			}
+		}
+		
+		TextComponentTranslation text = new TextComponentTranslation("loyaltyrewards.rewarded.message", new Object[] {time, minuteAmount});
+		text.getStyle().setColor(LoyaltyRewardConfigGen.general.messageColor);
+		
+		player.sendStatusMessage(text, true);
 	}
 }

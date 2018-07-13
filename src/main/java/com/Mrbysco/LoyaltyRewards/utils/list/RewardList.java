@@ -14,10 +14,10 @@ public class RewardList {
 
 	}
 	
-	public static void addRewardInfo(String name, ItemStack reward, String command, int Time)
+	public static void addRewardInfo(String name, ItemStack reward, String command, int Time, String Amount)
 	{
 		// Check if the info doesn't already exist
-		reward_info = new RewardInfo(name, reward, command, Time);
+		reward_info = new RewardInfo(name, reward, command, Time, Amount);
 		boolean containsName = false;
 		for(RewardInfo info : rewardList)
 		{
@@ -33,10 +33,10 @@ public class RewardList {
 		}
 	}
 	
-	public static void addRewardInfo(String name, ItemStack reward, int Time)
+	public static void addRewardInfo(String name, ItemStack reward, int Time, String Amount)
 	{
 		// Check if the info doesn't already exist
-		reward_info = new RewardInfo(name, reward, Time);
+		reward_info = new RewardInfo(name, reward, Time, Amount);
 		boolean containsName = false;
 		for(RewardInfo info : rewardList)
 		{
@@ -53,10 +53,10 @@ public class RewardList {
 		}
 	}
 	
-	public static void addRewardInfo(String name, String command, int Time)
+	public static void addRewardInfo(String name, String command, int Time, String Amount)
 	{
 		// Check if the info doesn't already exist
-		reward_info = new RewardInfo(name, command, Time);
+		reward_info = new RewardInfo(name, command, Time, Amount);
 		boolean containsName = false;
 		for(RewardInfo info : rewardList)
 		{
