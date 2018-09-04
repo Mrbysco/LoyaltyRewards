@@ -3,7 +3,10 @@ package com.Mrbysco.LoyaltyRewards;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.Mrbysco.LoyaltyRewards.config.LoyaltyRewardConfigGen;
+import com.Mrbysco.LoyaltyRewards.handlers.AntiAfkHandler;
 import com.Mrbysco.LoyaltyRewards.handlers.PlayerTimeHandler;
+import com.Mrbysco.LoyaltyRewards.packets.LoyaltyPacketHandler;
 import com.Mrbysco.LoyaltyRewards.proxy.CommonProxy;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -28,19 +31,33 @@ public class LoyaltyRewards {
 	public static CommonProxy proxy;
 	
 	public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
-		
+	
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent event)
 	{	
+		logger.info("Registering config / checking config");
+		MinecraftForge.EVENT_BUS.register(new LoyaltyRewardConfigGen());
+
+		if(LoyaltyRewardConfigGen.afkCheck.antiAFK)
+		{
+			logger.info("Registering Packets");
+			LoyaltyPacketHandler.registerMessages();
+		}
+		
 		proxy.Preinit();
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		logger.debug("Registering Event Handler");
+		logger.info("Registering Event Handler");
 		MinecraftForge.EVENT_BUS.register(new PlayerTimeHandler());
-				
+			
+		if(LoyaltyRewardConfigGen.afkCheck.antiAFK)
+		{
+			MinecraftForge.EVENT_BUS.register(new AntiAfkHandler());
+		}
+		
 		proxy.Init();
 	}
 	

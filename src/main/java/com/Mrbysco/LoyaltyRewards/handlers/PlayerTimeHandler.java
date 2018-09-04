@@ -33,8 +33,16 @@ public class PlayerTimeHandler {
 			tick++;
 			if (tick >= 20) {
 				tick = 0;
-				FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers().forEach(player ->
-				triggerReward(player, player.getStatFile().readStat(StatList.PLAY_ONE_MINUTE)));
+				if(LoyaltyRewardConfigGen.afkCheck.antiAFK)
+				{
+					FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers().forEach(player ->
+					triggerReward(player, player.getStatFile().readStat(AntiAfkHandler.PLAY_NOT_IDLE)));
+				}
+				else
+				{
+					FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers().forEach(player ->
+					triggerReward(player, player.getStatFile().readStat(StatList.PLAY_ONE_MINUTE)));
+				}
 		    }
 		}
 	}
@@ -51,7 +59,7 @@ public class PlayerTimeHandler {
 		
 		for(String tag : oldPlayerData.getKeySet())
 		{
-			if(tag.contains(Reference.MOD_ID))
+			if(tag.contains(Reference.MOD_ID) && !tag.contains("isAFK"))
 			{
 				if(!savedData.hasKey(tag) || savedData.getBoolean(tag) != oldPlayerData.getBoolean(tag))
 				{
@@ -77,7 +85,6 @@ public class PlayerTimeHandler {
 	        	{	
 	        		NBTTagCompound data = player.getEntityData();
 	        		boolean hasReward = data.getBoolean("loyaltyrewards:reward" + reward.getUniqueName() + "Given");
-	        		
 	        		if(player != null && !player.world.isRemote && !hasReward)
 	        		{
 	        			ItemStack stack = reward.getReward().copy();
@@ -88,19 +95,19 @@ public class PlayerTimeHandler {
 	        				dropItem(player, stack);
 	        				executeCommand(player, command);
 	        				sendRewardMessage(player, reward.getTime(), reward.getAmount());
-	        				data.setBoolean("inventory.full" + reward.getUniqueName() + "Given", true);
+	        				data.setBoolean("loyaltyrewards:reward" + reward.getUniqueName() + "Given", true);
 	    				}
 	    				else if(!stack.isEmpty() && command.isEmpty())
 	    				{
 	        				dropItem(player, stack);
 	        				sendRewardMessage(player, reward.getTime(), reward.getAmount());
-	        				data.setBoolean("inventory.full" + reward.getUniqueName() + "Given", true);
+	        				data.setBoolean("loyaltyrewards:reward" + reward.getUniqueName() + "Given", true);
 	    				}
 	    				else if(stack.isEmpty() && !command.isEmpty())
 	    				{
 	    					executeCommand(player, command);
 	        				sendRewardMessage(player, reward.getTime(), reward.getAmount());
-	    					data.setBoolean("inventory.full" + reward.getUniqueName() + "Given", true);
+	    					data.setBoolean("loyaltyrewards:reward" + reward.getUniqueName() + "Given", true);
 	    				}
 	        		}
 	        	}

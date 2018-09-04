@@ -1,16 +1,16 @@
 [
-{
-  "modid": "loyaltyrewards",
-  "name": "Loyalty Rewards",
-  "description": "Rewards for playtime",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["Mrbysco", "svennieke", "iskall85", "DownWithTaxation"],
-  "credits": "Iskall85 for coming up with the original idea and DownWithTaxation for expanding on it",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+	{
+	  "modid": "loyaltyrewards",
+	  "name": "Loyalty Rewards",
+	  "description": "Rewards for playtime",
+	  "version": "${version}",
+	  "mcversion": "${mcversion}",
+	  "url": "",
+	  "updateUrl": "",
+	  "authorList": ["Mrbysco", "svennieke", "iskall85", "DownWithTaxation"],
+	  "credits": "Iskall85 for coming up with the original idea and DownWithTaxation for expanding on it",
+	  "logoFile": "",
+	  "screenshots": [],
+	  "dependencies": []
+	}
 ]
