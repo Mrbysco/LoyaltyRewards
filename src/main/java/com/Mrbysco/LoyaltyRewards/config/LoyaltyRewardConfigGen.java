@@ -21,6 +21,9 @@ public class LoyaltyRewardConfigGen {
 	public static class General{
 		@Config.Comment("Changing this value will change the color of the message telling you you've unlocked a reward.")
 		public TextFormatting messageColor = TextFormatting.GOLD;
+		
+		@Config.Comment("When set to true players will get a toast notification if they get a reward, when false it will just be an action message. [Default: false]")
+		public boolean rewardToast = false;
 	}
 	
 	public static class afkCheck{

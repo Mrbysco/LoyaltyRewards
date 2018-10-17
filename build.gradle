@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "0.2"
+version = "0.3"
 group = "com.Mrbysco.LoyaltyRewards" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Loyalty-Rewards"
 
@@ -21,7 +21,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.4.2705"
+    version = "1.12.2-14.23.5.2768"
     runDir = "run"
     mappings = "snapshot_20171003"
 }
@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.+"
+	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.11.+"
 }
 
 processResources {

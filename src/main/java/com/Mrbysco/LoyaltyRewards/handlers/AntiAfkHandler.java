@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-import com.Mrbysco.LoyaltyRewards.LoyaltyRewards;
 import com.Mrbysco.LoyaltyRewards.Reference;
 import com.Mrbysco.LoyaltyRewards.config.LoyaltyRewardConfigGen;
 import com.Mrbysco.LoyaltyRewards.packets.LoyaltyAfkPacket;

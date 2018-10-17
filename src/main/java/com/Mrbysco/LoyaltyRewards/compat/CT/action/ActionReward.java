@@ -5,7 +5,9 @@ import com.Mrbysco.LoyaltyRewards.utils.list.RewardList;
 import crafttweaker.IAction;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class ActionReward implements IAction {
 
@@ -33,10 +35,21 @@ public class ActionReward implements IAction {
 		this.amount = Amount;
 		this.removal = false;
 	}
+	
 	public ActionReward(String name, String command, int Time, String Amount) {
 		this.uniqueName = name;
 		this.rewardItem = ItemStack.EMPTY;
 		this.command = command;
+		this.time = Time;
+		this.amount = Amount;
+		this.removal = false;
+	}
+	
+	public ActionReward(String name, int Time, String Amount, String entityName) {
+		ItemStack eggStack = getEgg(entityName);
+		this.uniqueName = name;
+		this.rewardItem = eggStack;
+		this.command = "";
 		this.time = Time;
 		this.amount = Amount;
 		this.removal = false;
@@ -50,6 +63,17 @@ public class ActionReward implements IAction {
 		this.amount = "";
 		this.removal = true;
 	}
+	
+	public static ItemStack getEgg(String entityName)
+    {
+        ItemStack stack = new ItemStack(Items.SPAWN_EGG);
+        NBTTagCompound entityTag = new NBTTagCompound();
+        entityTag.setString("id", entityName);
+        NBTTagCompound eggTag = new NBTTagCompound();
+        eggTag.setTag("EntityTag", entityTag);
+        stack.setTagCompound(eggTag);
+        return stack;
+    }
 	
 	@Override
 	public void apply() {
