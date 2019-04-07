@@ -1,7 +1,6 @@
-package com.Mrbysco.LoyaltyRewards.packets;
+package com.mrbysco.loyaltyrewards.packets;
 
-import com.Mrbysco.LoyaltyRewards.toasts.ToastReward;
-
+import com.mrbysco.loyaltyrewards.toasts.ToastReward;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -10,6 +9,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LoyaltyToastPacket implements IMessage
 {
@@ -39,13 +40,9 @@ public class LoyaltyToastPacket implements IMessage
 	public static class PacketHandler implements IMessageHandler<LoyaltyToastPacket, IMessage>
 	{
 		@Override
+		@SideOnly(Side.CLIENT)
 		public IMessage onMessage(LoyaltyToastPacket message, MessageContext ctx) {
-			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> 
-			{
-				System.out.println(message.stack);
-				System.out.println(message.textTranslation);
-				Minecraft.getMinecraft().getToastGui().add(new ToastReward(message.stack, message.textTranslation));
-			});
+			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> { Minecraft.getMinecraft().getToastGui().add(new ToastReward(message.stack, message.textTranslation)); });
 			return null;
 		}
 	}

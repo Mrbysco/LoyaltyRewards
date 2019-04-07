@@ -1,6 +1,6 @@
-package com.Mrbysco.LoyaltyRewards.config;
+package com.mrbysco.loyaltyrewards.config;
 
-import com.Mrbysco.LoyaltyRewards.Reference;
+import com.mrbysco.loyaltyrewards.Reference;
 
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.config.Config;

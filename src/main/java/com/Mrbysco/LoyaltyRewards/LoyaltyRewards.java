@@ -1,14 +1,10 @@
-package com.Mrbysco.LoyaltyRewards;
+package com.mrbysco.loyaltyrewards;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.Mrbysco.LoyaltyRewards.config.LoyaltyRewardConfigGen;
-import com.Mrbysco.LoyaltyRewards.handlers.AntiAfkHandler;
-import com.Mrbysco.LoyaltyRewards.handlers.PlayerTimeHandler;
-import com.Mrbysco.LoyaltyRewards.packets.LoyaltyPacketHandler;
-import com.Mrbysco.LoyaltyRewards.proxy.CommonProxy;
-
+import com.mrbysco.loyaltyrewards.config.LoyaltyRewardConfigGen;
+import com.mrbysco.loyaltyrewards.handlers.AntiAfkHandler;
+import com.mrbysco.loyaltyrewards.handlers.PlayerTimeHandler;
+import com.mrbysco.loyaltyrewards.packets.LoyaltyPacketHandler;
+import com.mrbysco.loyaltyrewards.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -17,10 +13,13 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Reference.MOD_ID, 
 	name = Reference.MOD_NAME, 
-	version = Reference.VERSION, 
+	version = Reference.VERSION,
+	dependencies = Reference.DEPENDENCIES,
 	acceptedMinecraftVersions = Reference.ACCEPTED_VERSIONS)
 
 public class LoyaltyRewards {

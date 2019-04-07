@@ -1,4 +1,4 @@
-package com.Mrbysco.LoyaltyRewards.proxy;
+package com.mrbysco.loyaltyrewards.proxy;
 
 public class ClientProxy extends CommonProxy{
 	public void Preinit() {

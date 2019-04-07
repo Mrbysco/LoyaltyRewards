@@ -1,13 +1,13 @@
-package com.Mrbysco.LoyaltyRewards.handlers;
+package com.mrbysco.loyaltyrewards.handlers;
 
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-import com.Mrbysco.LoyaltyRewards.Reference;
-import com.Mrbysco.LoyaltyRewards.config.LoyaltyRewardConfigGen;
-import com.Mrbysco.LoyaltyRewards.packets.LoyaltyAfkPacket;
-import com.Mrbysco.LoyaltyRewards.packets.LoyaltyPacketHandler;
+import com.mrbysco.loyaltyrewards.Reference;
+import com.mrbysco.loyaltyrewards.config.LoyaltyRewardConfigGen;
+import com.mrbysco.loyaltyrewards.packets.LoyaltyAfkPacket;
+import com.mrbysco.loyaltyrewards.packets.LoyaltyPacketHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

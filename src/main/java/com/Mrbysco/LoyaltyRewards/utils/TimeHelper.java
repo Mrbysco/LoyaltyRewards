@@ -1,4 +1,4 @@
-package com.Mrbysco.LoyaltyRewards.utils;
+package com.mrbysco.loyaltyrewards.utils;
 
 public class TimeHelper {
 	public static int getProperTime(int time, String amount) {

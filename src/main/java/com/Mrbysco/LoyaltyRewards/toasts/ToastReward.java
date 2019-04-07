@@ -1,4 +1,4 @@
-package com.Mrbysco.LoyaltyRewards.toasts;
+package com.mrbysco.loyaltyrewards.toasts;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.toasts.GuiToast;

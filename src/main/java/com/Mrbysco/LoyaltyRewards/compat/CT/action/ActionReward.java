@@ -1,6 +1,6 @@
-package com.Mrbysco.LoyaltyRewards.compat.CT.action;
+package com.mrbysco.loyaltyrewards.compat.CT.action;
 
-import com.Mrbysco.LoyaltyRewards.utils.list.RewardList;
+import com.mrbysco.loyaltyrewards.utils.list.RewardList;
 
 import crafttweaker.IAction;
 import crafttweaker.api.item.IItemStack;

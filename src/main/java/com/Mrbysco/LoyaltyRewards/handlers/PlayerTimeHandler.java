@@ -1,12 +1,12 @@
-package com.Mrbysco.LoyaltyRewards.handlers;
+package com.mrbysco.loyaltyrewards.handlers;
 
-import com.Mrbysco.LoyaltyRewards.Reference;
-import com.Mrbysco.LoyaltyRewards.config.LoyaltyRewardConfigGen;
-import com.Mrbysco.LoyaltyRewards.packets.LoyaltyPacketHandler;
-import com.Mrbysco.LoyaltyRewards.packets.LoyaltyToastPacket;
-import com.Mrbysco.LoyaltyRewards.utils.TimeHelper;
-import com.Mrbysco.LoyaltyRewards.utils.list.RewardInfo;
-import com.Mrbysco.LoyaltyRewards.utils.list.RewardList;
+import com.mrbysco.loyaltyrewards.Reference;
+import com.mrbysco.loyaltyrewards.config.LoyaltyRewardConfigGen;
+import com.mrbysco.loyaltyrewards.packets.LoyaltyPacketHandler;
+import com.mrbysco.loyaltyrewards.packets.LoyaltyToastPacket;
+import com.mrbysco.loyaltyrewards.utils.TimeHelper;
+import com.mrbysco.loyaltyrewards.utils.list.RewardInfo;
+import com.mrbysco.loyaltyrewards.utils.list.RewardList;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;

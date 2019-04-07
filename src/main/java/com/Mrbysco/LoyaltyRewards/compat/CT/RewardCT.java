@@ -1,7 +1,6 @@
-package com.Mrbysco.LoyaltyRewards.compat.CT;
+package com.mrbysco.loyaltyrewards.compat.CT;
 
-import com.Mrbysco.LoyaltyRewards.compat.CT.action.ActionReward;
-
+import com.mrbysco.loyaltyrewards.compat.CT.action.ActionReward;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.entity.IEntityDefinition;
@@ -29,7 +28,6 @@ public class RewardCT {
 	
 	@ZenMethod
 	public static void addEggReward(String uniqueName, int Time, String Amount, IEntityDefinition entity) {
-		System.out.println(entity.getId());
 		CraftTweakerAPI.apply(new ActionReward(uniqueName, Time, Amount, entity.getId()));
 	}
 	

@@ -1,4 +1,4 @@
-package com.Mrbysco.LoyaltyRewards.utils.list;
+package com.mrbysco.loyaltyrewards.utils.list;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
-package com.Mrbysco.LoyaltyRewards.packets;
+package com.mrbysco.loyaltyrewards.packets;
 
-import com.Mrbysco.LoyaltyRewards.handlers.AntiAfkHandler;
+import com.mrbysco.loyaltyrewards.handlers.AntiAfkHandler;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
