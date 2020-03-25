@@ -1,20 +1,13 @@
 package com.mrbysco.loyaltyrewards.registry;
 
-import com.mrbysco.loyaltyrewards.config.LoyaltyRewardConfigGen;
-import com.mrbysco.loyaltyrewards.packets.LoyaltyPacketHandler;
-import com.mrbysco.loyaltyrewards.packets.LoyaltyToastPacket;
+import com.mrbysco.loyaltyrewards.config.LoyaltyConfig;
 import com.mrbysco.loyaltyrewards.registry.actions.IAction;
-import com.mrbysco.loyaltyrewards.utils.TimeHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 public class RewardInfo implements IReward {
@@ -56,7 +49,7 @@ public class RewardInfo implements IReward {
     }
 
     @Override
-    public void trigger(World worldIn, BlockPos pos, EntityPlayer playerIn) {
+    public void trigger(World worldIn, BlockPos pos, PlayerEntity playerIn) {
         if(this.actions.length > 0) {
             for(int i = 0; i < actions.length; i++) {
                 IAction action = actions[i];
@@ -66,28 +59,39 @@ public class RewardInfo implements IReward {
         sendRewardMessage(playerIn, getTime());
     }
 
-    public void sendRewardMessage(EntityPlayer player, int totalSeconds)
+    public void sendRewardMessage(PlayerEntity player, int totalSeconds)
     {
-        ITextComponent text = new TextComponentTranslation("loyaltyrewards.rewarded.message");
-        text.getStyle().setColor(TextFormatting.YELLOW);
-        text.appendSibling(TimeHelper.secondsToTextComponent(totalSeconds));
+        ITextComponent text = new TranslationTextComponent("loyaltyrewards.rewarded.message").applyTextStyle(TextFormatting.YELLOW).appendSibling(secondsToString(totalSeconds));
 
-        switch (LoyaltyRewardConfigGen.general.announceMethod) {
+        switch (LoyaltyConfig.SERVER.announceMethod.get()) {
             default:
-                ITextComponent chatComponent = new TextComponentString("[LoyaltyRewards] ").appendSibling(text);
+                ITextComponent chatComponent = new StringTextComponent("[LoyaltyRewards] ").appendSibling(text);
                 player.sendMessage(chatComponent);
                 break;
             case STATUS:
                 player.sendStatusMessage(text, true);
                 break;
-            case TOAST:
-                String toastMessage = I18n.format("loyaltyrewards.rewarded.toast.message", new Object[] {TimeHelper.secondsToString(totalSeconds)});
-                LoyaltyPacketHandler.INSTANCE.sendTo(new LoyaltyToastPacket(new ItemStack(Items.GOLD_INGOT), toastMessage), (EntityPlayerMP)player);
-                break;
         }
     }
 
-
+    private ITextComponent secondsToString(int totalSeconds) {
+        //Calculate the seconds to display:
+        int seconds = totalSeconds % 60;
+        totalSeconds -= seconds;
+        //Calculate the minutes:
+        long minutesCount = totalSeconds / 60;
+        long minutes = minutesCount % 60;
+        minutesCount -= minutes;
+        //Calculate the hours:
+        long hours = minutesCount / 60;
+        ITextComponent hourComponent = new StringTextComponent(String.format("\n %02d", hours)).applyTextStyle(TextFormatting.YELLOW);
+        ITextComponent hourExtra = new StringTextComponent("H").applyTextStyle(TextFormatting.GOLD);
+        ITextComponent minuteComponent = new StringTextComponent(String.format(":%02d", minutes)).applyTextStyle(TextFormatting.YELLOW);
+        ITextComponent minuteExtra = new StringTextComponent("M").applyTextStyle(TextFormatting.GOLD);
+        ITextComponent secondComponent = new StringTextComponent(String.format(":%02d", seconds)).applyTextStyle(TextFormatting.YELLOW);
+        ITextComponent secondExtra = new StringTextComponent("S").applyTextStyle(TextFormatting.GOLD);
+        return hourComponent.appendSibling(hourExtra).appendSibling(minuteComponent).appendSibling(minuteExtra).appendSibling(secondComponent).appendSibling(secondExtra);
+    }
 
     @Override
     public RewardInfo setActions(IAction[] actions) {

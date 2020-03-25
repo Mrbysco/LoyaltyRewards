@@ -22,14 +22,7 @@ public class RewardRegistry {
         if(!infoMap.containsKey(reward.getName())) {
             infoMap.put(reward.getName(), reward);
         } else {
-            LoyaltyRewards.logger.error("An attempt was made to register a reward with an ID that already exists, ID: " + reward.getName());
-        }
-    }
-
-    public void removeReward(String uniqueID)
-    {
-        if(infoMap.containsKey(uniqueID)) {
-            infoMap.keySet().remove(uniqueID);
+            LoyaltyRewards.LOGGER.error("An attempt was made to register a reward with an ID that already exists, ID: " + reward.getName());
         }
     }
 }

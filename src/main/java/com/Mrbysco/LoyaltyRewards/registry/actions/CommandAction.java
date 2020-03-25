@@ -1,6 +1,6 @@
 package com.mrbysco.loyaltyrewards.registry.actions;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,7 +17,7 @@ public class CommandAction extends BaseAction {
     }
 
     @Override
-    public void trigger(World worldIn, BlockPos pos, EntityPlayer playerIn) {
+    public void trigger(World worldIn, BlockPos pos, PlayerEntity playerIn) {
         if(commands.length > 0) {
             for(int i = 0; i < commands.length; i++) {
                 MinecraftServer server = playerIn.getServer();
@@ -28,10 +28,10 @@ public class CommandAction extends BaseAction {
                 }
                 else if(rawCommand.contains("@PLAYER")) {
                     String command = new String(rawCommand);
-                    rawCommand = command.replace("@PLAYER", playerIn.getName());
+                    rawCommand = command.replace("@PLAYER", playerIn.getName().getUnformattedComponentText());
                 }
 
-                server.getCommandManager().executeCommand(server, rawCommand);
+                server.getCommandManager().handleCommand(server.getCommandSource(), rawCommand);
             }
         }
     }

@@ -1,0 +1,14 @@
+modLoader="javafml"
+loaderVersion="[31,)"
+issueTrackerURL="https://github.com/Mrbysco/LoyaltyRewards/issues"
+
+[[mods]]
+modId="loyaltyrewards"
+version="${file.jarVersion}"
+displayName="Loyalty Rewards"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/loyalty-rewards"
+authors="Mrbysco, ShyNieke, iskall85, DownWithTaxation"
+credits="Iskall85 for coming up with the original idea and DownWithTaxation for expanding on it"
+description='''
+Rewards for playtime
+'''

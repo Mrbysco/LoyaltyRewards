@@ -1,7 +1,7 @@
 package com.mrbysco.loyaltyrewards.registry;
 
 import com.mrbysco.loyaltyrewards.registry.actions.IAction;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -31,7 +31,7 @@ public interface IReward {
      *
      * @param playerIn The player who gets the reward
      */
-    void trigger(World worldIn, BlockPos pos, EntityPlayer playerIn);
+    void trigger(World worldIn, BlockPos pos, PlayerEntity playerIn);
 
     RewardInfo setActions(IAction[] actions);
 

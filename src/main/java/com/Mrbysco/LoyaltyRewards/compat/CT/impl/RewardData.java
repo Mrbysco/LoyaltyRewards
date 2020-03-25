@@ -1,17 +1,15 @@
 package com.mrbysco.loyaltyrewards.compat.ct.impl;
 
+import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.google.common.collect.Lists;
 import com.mrbysco.loyaltyrewards.registry.RewardInfo;
 import com.mrbysco.loyaltyrewards.registry.actions.BaseAction;
-import crafttweaker.annotations.ZenRegister;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenConstructor;
-import stanhebben.zenscript.annotations.ZenMethod;
+import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
 
-@ZenClass("mods.loyaltyrewards.RewardInfo")
 @ZenRegister
+@ZenCodeType.Name("mods.loyaltyrewards.RewardInfo")
 public class RewardData {
     private final RewardInfo internal;
 
@@ -19,17 +17,17 @@ public class RewardData {
         this.internal = info;
     }
 
-    @ZenConstructor
+    @ZenCodeType.Constructor
     public RewardData(String uniqueID, int time) {
         this(new RewardInfo(uniqueID, time));
     }
 
-    @ZenConstructor
+    @ZenCodeType.Constructor
     public RewardData(String uniqueID, int time, boolean repeatable) {
         this(new RewardInfo(uniqueID, time, repeatable));
     }
 
-    @ZenMethod
+    @ZenCodeType.Method
     public RewardData setActions(RewardAction[] actions) {
         if(actions.length > 0) {
             List<BaseAction> baseList = Lists.newArrayList();
@@ -45,7 +43,7 @@ public class RewardData {
         return this;
     }
 
-    @ZenMethod
+    @ZenCodeType.Method
     public RewardData setAction(RewardAction action) {
         return new RewardData(this.internal.setActions(new BaseAction[]{action.getInternal()}));
     }

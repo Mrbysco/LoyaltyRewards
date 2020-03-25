@@ -1,67 +1,33 @@
 package com.mrbysco.loyaltyrewards;
 
-import com.mrbysco.loyaltyrewards.config.LoyaltyRewardConfigGen;
-import com.mrbysco.loyaltyrewards.handlers.AntiAfkHandler;
-import com.mrbysco.loyaltyrewards.handlers.LoyaltyHandlers;
-import com.mrbysco.loyaltyrewards.packets.LoyaltyPacketHandler;
-import com.mrbysco.loyaltyrewards.proxy.CommonProxy;
+import com.mrbysco.loyaltyrewards.config.LoyaltyConfig;
+import com.mrbysco.loyaltyrewards.handler.LoyaltyHandler;
+import com.mrbysco.loyaltyrewards.registry.RewardRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Reference.MOD_ID,
-	name = Reference.MOD_NAME, 
-	version = Reference.VERSION,
-	dependencies = Reference.DEPENDENCIES,
-	acceptedMinecraftVersions = Reference.ACCEPTED_VERSIONS)
+@Mod(Reference.MOD_ID)
 public class LoyaltyRewards {
-	@Instance(Reference.MOD_ID)
-	public static LoyaltyRewards instance;
-	
-	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
-	public static CommonProxy proxy;
-	
-	public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
-	
-	@EventHandler
-	public void PreInit(FMLPreInitializationEvent event)
-	{	
-		logger.info("Registering config / checking config");
-		MinecraftForge.EVENT_BUS.register(new LoyaltyRewardConfigGen());
+    public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
 
-		if(LoyaltyRewardConfigGen.afkCheck.antiAFK)
-		{
-			logger.info("Registering Packets");
-			LoyaltyPacketHandler.registerMessages();
-		}
-		
-		proxy.Preinit();
-	}
-	
-	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
-		logger.info("Registering Event Handler");
-		MinecraftForge.EVENT_BUS.register(new LoyaltyHandlers());
-			
-		if(LoyaltyRewardConfigGen.afkCheck.antiAFK)
-		{
-			MinecraftForge.EVENT_BUS.register(new AntiAfkHandler());
-		}
-		
-		proxy.Init();
-	}
-	
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event)
-	{
-		proxy.Postinit();
-	}
+    public LoyaltyRewards() {
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, LoyaltyConfig.serverSpec);
+        eventBus.register(LoyaltyConfig.class);
+
+        MinecraftForge.EVENT_BUS.register(new LoyaltyHandler());
+    }
+
+    @SubscribeEvent
+    public void serverStart(FMLServerStartingEvent event) {
+        RewardRegistry.initializeRewards();
+    }
 }
