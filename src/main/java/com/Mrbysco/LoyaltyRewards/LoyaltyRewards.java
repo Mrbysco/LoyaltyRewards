@@ -2,7 +2,7 @@ package com.mrbysco.loyaltyrewards;
 
 import com.mrbysco.loyaltyrewards.config.LoyaltyRewardConfigGen;
 import com.mrbysco.loyaltyrewards.handlers.AntiAfkHandler;
-import com.mrbysco.loyaltyrewards.handlers.PlayerTimeHandler;
+import com.mrbysco.loyaltyrewards.handlers.LoyaltyHandlers;
 import com.mrbysco.loyaltyrewards.packets.LoyaltyPacketHandler;
 import com.mrbysco.loyaltyrewards.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,12 +16,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Reference.MOD_ID, 
+@Mod(modid = Reference.MOD_ID,
 	name = Reference.MOD_NAME, 
 	version = Reference.VERSION,
 	dependencies = Reference.DEPENDENCIES,
 	acceptedMinecraftVersions = Reference.ACCEPTED_VERSIONS)
-
 public class LoyaltyRewards {
 	@Instance(Reference.MOD_ID)
 	public static LoyaltyRewards instance;
@@ -50,7 +49,7 @@ public class LoyaltyRewards {
 	public void init(FMLInitializationEvent event)
 	{
 		logger.info("Registering Event Handler");
-		MinecraftForge.EVENT_BUS.register(new PlayerTimeHandler());
+		MinecraftForge.EVENT_BUS.register(new LoyaltyHandlers());
 			
 		if(LoyaltyRewardConfigGen.afkCheck.antiAFK)
 		{

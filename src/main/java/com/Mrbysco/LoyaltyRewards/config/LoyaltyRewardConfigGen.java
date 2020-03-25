@@ -1,7 +1,6 @@
 package com.mrbysco.loyaltyrewards.config;
 
 import com.mrbysco.loyaltyrewards.Reference;
-
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -17,13 +16,19 @@ public class LoyaltyRewardConfigGen {
 	
 	@Config.Comment({"AFK Checking Settings"})
 	public static afkCheck afkCheck = new afkCheck();
-	
+
+	public enum EnumAnnounceMethod {
+		CHAT,
+		STATUS,
+		TOAST
+	}
+
 	public static class General{
-		@Config.Comment("Changing this value will change the color of the message telling you you've unlocked a reward.")
-		public TextFormatting messageColor = TextFormatting.GOLD;
+		@Config.Comment("Changing this value will change the color of the message the player receives when being rewarded for playing [Default: YELLOW]")
+		public TextFormatting messageColor = TextFormatting.YELLOW;
 		
-		@Config.Comment("When set to true players will get a toast notification if they get a reward, when false it will just be an action message. [Default: false]")
-		public boolean rewardToast = false;
+		@Config.Comment("Changing this value will change how a play will know they've been rewarded [Default: CHAT]")
+		public EnumAnnounceMethod announceMethod = EnumAnnounceMethod.CHAT;
 	}
 	
 	public static class afkCheck{
