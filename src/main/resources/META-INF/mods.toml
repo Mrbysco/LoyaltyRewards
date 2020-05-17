@@ -12,3 +12,10 @@ credits="Iskall85 for coming up with the original idea and DownWithTaxation for 
 description='''
 Rewards for playtime
 '''
+
+[[dependencies.loyaltyrewards]]
+    modId="crafttweaker"
+    mandatory=true
+    versionRange="[6.0.0.24,)"
+    ordering="NONE"
+    side="BOTH"

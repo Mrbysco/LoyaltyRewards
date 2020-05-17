@@ -21,7 +21,6 @@ public class LoyaltyHandler {
         World world = event.player.world;
         if(!world.isRemote && world.getGameTime() % 20 == 0) {
             PlayerEntity player = event.player;
-
             for (Map.Entry<String, RewardInfo> entry : RewardRegistry.INSTANCE.getInfoMap().entrySet()) {
                 String infoID = entry.getKey();
                 String infoTimerTag = Reference.MOD_PREFIX + infoID;
