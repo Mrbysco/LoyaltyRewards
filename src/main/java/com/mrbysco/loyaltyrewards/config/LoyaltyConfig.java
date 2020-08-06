@@ -49,6 +49,6 @@ public class LoyaltyConfig {
 
     @SubscribeEvent
     public static void onFileChange(final ModConfig.Reloading configEvent) {
-        LoyaltyRewards.LOGGER.debug(" Loyalty Rewards config just got changed on the file system!");
+        LoyaltyRewards.LOGGER.debug("Loyalty Rewards config just got changed on the file system!");
     }
 }

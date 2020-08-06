@@ -3,15 +3,17 @@ package com.mrbysco.loyaltyrewards.registry;
 import com.mrbysco.loyaltyrewards.config.LoyaltyConfig;
 import com.mrbysco.loyaltyrewards.registry.actions.IAction;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 public class RewardInfo implements IReward {
-    private String uniqueID;
+    private final String uniqueID;
     private int rewardTime;
     private boolean repeatable;
     private IAction[] actions = new IAction[]{};
@@ -61,12 +63,12 @@ public class RewardInfo implements IReward {
 
     public void sendRewardMessage(PlayerEntity player, int totalSeconds)
     {
-        ITextComponent text = new TranslationTextComponent("loyaltyrewards.rewarded.message").applyTextStyle(TextFormatting.YELLOW).appendSibling(secondsToString(totalSeconds));
+        ITextComponent text = new TranslationTextComponent("loyaltyrewards.rewarded.message").mergeStyle(TextFormatting.YELLOW).append(secondsToString(totalSeconds));
 
         switch (LoyaltyConfig.SERVER.announceMethod.get()) {
             default:
-                ITextComponent chatComponent = new StringTextComponent("[LoyaltyRewards] ").appendSibling(text);
-                player.sendMessage(chatComponent);
+                ITextComponent chatComponent = new StringTextComponent("[LoyaltyRewards] ").append(text);
+                player.sendMessage(chatComponent, Util.DUMMY_UUID);
                 break;
             case STATUS:
                 player.sendStatusMessage(text, true);
@@ -84,13 +86,13 @@ public class RewardInfo implements IReward {
         minutesCount -= minutes;
         //Calculate the hours:
         long hours = minutesCount / 60;
-        ITextComponent hourComponent = new StringTextComponent(String.format("\n %02d", hours)).applyTextStyle(TextFormatting.YELLOW);
-        ITextComponent hourExtra = new StringTextComponent("H").applyTextStyle(TextFormatting.GOLD);
-        ITextComponent minuteComponent = new StringTextComponent(String.format(":%02d", minutes)).applyTextStyle(TextFormatting.YELLOW);
-        ITextComponent minuteExtra = new StringTextComponent("M").applyTextStyle(TextFormatting.GOLD);
-        ITextComponent secondComponent = new StringTextComponent(String.format(":%02d", seconds)).applyTextStyle(TextFormatting.YELLOW);
-        ITextComponent secondExtra = new StringTextComponent("S").applyTextStyle(TextFormatting.GOLD);
-        return hourComponent.appendSibling(hourExtra).appendSibling(minuteComponent).appendSibling(minuteExtra).appendSibling(secondComponent).appendSibling(secondExtra);
+        TextComponent hourComponent = (TextComponent)new StringTextComponent(String.format("\n %02d", hours)).mergeStyle(TextFormatting.YELLOW);
+        TextComponent hourExtra = (TextComponent)new StringTextComponent("H").mergeStyle(TextFormatting.GOLD);
+        TextComponent minuteComponent = (TextComponent)new StringTextComponent(String.format(":%02d", minutes)).mergeStyle(TextFormatting.YELLOW);
+        TextComponent minuteExtra = (TextComponent)new StringTextComponent("M").mergeStyle(TextFormatting.GOLD);
+        TextComponent secondComponent = (TextComponent)new StringTextComponent(String.format(":%02d", seconds)).mergeStyle(TextFormatting.YELLOW);
+        TextComponent secondExtra = (TextComponent)new StringTextComponent("S").mergeStyle(TextFormatting.GOLD);
+        return hourComponent.append(hourExtra).append(minuteComponent).append(minuteExtra).append(secondComponent).append(secondExtra);
     }
 
     @Override

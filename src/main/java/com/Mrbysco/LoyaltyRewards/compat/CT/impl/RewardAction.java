@@ -34,8 +34,8 @@ public class RewardAction {
     @ZenCodeType.Method
     public RewardAction createItemRewards(IItemStack[] stacks) {
         List<ItemStack> stackList = Lists.newArrayList();
-        for(int i = 0; i < stacks.length; i++) {
-            ItemStack newInternal = stacks[i].getInternal();
+        for (IItemStack stack : stacks) {
+            ItemStack newInternal = stack.getInternal();
             stackList.add(newInternal);
         }
         ItemStack[] stackArray = new ItemStack[stackList.size()];
