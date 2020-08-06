@@ -53,8 +53,7 @@ public class RewardInfo implements IReward {
     @Override
     public void trigger(World worldIn, BlockPos pos, PlayerEntity playerIn) {
         if(this.actions.length > 0) {
-            for(int i = 0; i < actions.length; i++) {
-                IAction action = actions[i];
+            for (IAction action : actions) {
                 action.trigger(worldIn, pos, playerIn);
             }
         }
