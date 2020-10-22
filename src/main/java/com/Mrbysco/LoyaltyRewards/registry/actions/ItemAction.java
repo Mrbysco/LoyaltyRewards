@@ -14,7 +14,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 public class ItemAction extends BaseAction {
-    private ItemStack[] stacks;
+    private final ItemStack[] stacks;
 
     public ItemAction(ItemStack[] stacks) {
         this.stacks = stacks;

@@ -25,8 +25,7 @@ public class RewardRegistry {
     public void removeReward(String rewardName)
     {
         if(infoMap.containsKey(rewardName)) {
-            RewardInfo reward = infoMap.get(rewardName);
-            infoMap.remove(reward);
+            infoMap.remove(rewardName);
         } else {
             LoyaltyRewards.LOGGER.error("An attempt was made to remove a reward with an ID that doesn't exists, ID: " + rewardName);
         }

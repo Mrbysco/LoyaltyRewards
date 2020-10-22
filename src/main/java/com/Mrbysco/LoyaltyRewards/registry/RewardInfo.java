@@ -1,6 +1,7 @@
 package com.mrbysco.loyaltyrewards.registry;
 
 import com.mrbysco.loyaltyrewards.config.LoyaltyConfig;
+import com.mrbysco.loyaltyrewards.config.LoyaltyConfig.EnumAnnounceMethod;
 import com.mrbysco.loyaltyrewards.registry.actions.IAction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Util;
@@ -64,14 +65,11 @@ public class RewardInfo implements IReward {
     {
         ITextComponent text = new TranslationTextComponent("loyaltyrewards.rewarded.message").mergeStyle(TextFormatting.YELLOW).append(secondsToString(totalSeconds));
 
-        switch (LoyaltyConfig.SERVER.announceMethod.get()) {
-            default:
-                ITextComponent chatComponent = new StringTextComponent("[LoyaltyRewards] ").append(text);
-                player.sendMessage(chatComponent, Util.DUMMY_UUID);
-                break;
-            case STATUS:
-                player.sendStatusMessage(text, true);
-                break;
+        if (LoyaltyConfig.SERVER.announceMethod.get() == EnumAnnounceMethod.STATUS) {
+            player.sendStatusMessage(text, true);
+        } else {
+            ITextComponent chatComponent = new StringTextComponent("[LoyaltyRewards] ").append(text);
+            player.sendMessage(chatComponent, Util.DUMMY_UUID);
         }
     }
 

@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CommandAction extends BaseAction {
-    private String[] commands;
+    private final String[] commands;
 
     public CommandAction(String[] commands) {
         this.commands = commands;

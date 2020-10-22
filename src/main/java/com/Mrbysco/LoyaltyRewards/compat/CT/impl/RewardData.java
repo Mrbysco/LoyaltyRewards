@@ -31,8 +31,8 @@ public class RewardData {
     public RewardData setActions(RewardAction[] actions) {
         if(actions.length > 0) {
             List<BaseAction> baseList = Lists.newArrayList();
-            for(int i = 0; i < actions.length; i++) {
-                BaseAction newInternal = actions[i].getInternal();
+            for (RewardAction action : actions) {
+                BaseAction newInternal = action.getInternal();
                 baseList.add(newInternal);
             }
             BaseAction[] criteriaArray = new BaseAction[baseList.size()];
