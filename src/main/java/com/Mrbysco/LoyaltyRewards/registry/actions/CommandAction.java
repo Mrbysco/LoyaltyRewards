@@ -19,19 +19,20 @@ public class CommandAction extends BaseAction {
     @Override
     public void trigger(World worldIn, BlockPos pos, PlayerEntity playerIn) {
         if(commands.length > 0) {
-            for(int i = 0; i < commands.length; i++) {
+            for (String s : commands) {
                 MinecraftServer server = playerIn.getServer();
-                String rawCommand = new String(this.commands[i]);
-                if(rawCommand.contains("@PLAYERPOS")) {
-                    String command = new String(rawCommand);
-                    rawCommand = command.replace("@PLAYERPOS", pos.getX() + " " + pos.getY() + " " + pos.getZ());
-                }
-                else if(rawCommand.contains("@PLAYER")) {
-                    String command = new String(rawCommand);
-                    rawCommand = command.replace("@PLAYER", playerIn.getName().getUnformattedComponentText());
-                }
+                if(server != null) {
+                    String rawCommand = s;
+                    if (rawCommand.contains("@PLAYERPOS")) {
+                        String command = rawCommand;
+                        rawCommand = command.replace("@PLAYERPOS", pos.getX() + " " + pos.getY() + " " + pos.getZ());
+                    } else if (rawCommand.contains("@PLAYER")) {
+                        String command = rawCommand;
+                        rawCommand = command.replace("@PLAYER", playerIn.getName().getUnformattedComponentText());
+                    }
 
-                server.getCommandManager().handleCommand(server.getCommandSource(), rawCommand);
+                    server.getCommandManager().handleCommand(server.getCommandSource(), rawCommand);
+                }
             }
         }
     }

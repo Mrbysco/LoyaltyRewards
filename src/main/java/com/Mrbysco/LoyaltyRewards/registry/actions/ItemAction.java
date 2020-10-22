@@ -26,9 +26,9 @@ public class ItemAction extends BaseAction {
     @Override
     public void trigger(World worldIn, BlockPos pos, PlayerEntity playerIn) {
         if(stacks.length > 0) {
-            for(int i = 0; i < stacks.length; i++) {
-                ItemStack stack = this.stacks[i].copy();
-                if(!stack.isEmpty()) {
+            for (ItemStack itemStack : stacks) {
+                ItemStack stack = itemStack.copy();
+                if (!stack.isEmpty()) {
                     if (playerIn.addItemStackToInventory(stack)) {
                         playerIn.world.playSound((PlayerEntity) null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((playerIn.getRNG().nextFloat() - playerIn.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     } else {
@@ -36,10 +36,12 @@ public class ItemAction extends BaseAction {
                         playerIn.sendMessage(text);
 
                         ItemEntity itemEntity = EntityType.ITEM.create(worldIn);
-                        itemEntity.setItem(stack);
-                        itemEntity.setPosition(pos.getX(), pos.getY() + 0.5, pos.getZ());
-                        worldIn.addEntity(itemEntity);
-                    }
+                        if(itemEntity != null) {
+                            itemEntity.setItem(stack);
+                            itemEntity.setPosition(pos.getX(), pos.getY() + 0.5, pos.getZ());
+                            worldIn.addEntity(itemEntity);
+                        }
+                        }
                 }
             }
         }
