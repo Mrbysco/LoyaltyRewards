@@ -5,11 +5,14 @@ import com.google.common.collect.Lists;
 import com.mrbysco.loyaltyrewards.registry.RewardInfo;
 import com.mrbysco.loyaltyrewards.registry.actions.BaseAction;
 import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.java.ZenCodeType.Constructor;
+import org.openzen.zencode.java.ZenCodeType.Method;
+import org.openzen.zencode.java.ZenCodeType.Name;
 
 import java.util.List;
 
 @ZenRegister
-@ZenCodeType.Name("mods.loyaltyrewards.RewardInfo")
+@Name("mods.loyaltyrewards.RewardInfo")
 public class RewardData {
     private final RewardInfo internal;
 
@@ -17,17 +20,17 @@ public class RewardData {
         this.internal = info;
     }
 
-    @ZenCodeType.Constructor
+    @Constructor
     public RewardData(String uniqueID, int time) {
         this(new RewardInfo(uniqueID, time));
     }
 
-    @ZenCodeType.Constructor
+    @Constructor
     public RewardData(String uniqueID, int time, boolean repeatable) {
         this(new RewardInfo(uniqueID, time, repeatable));
     }
 
-    @ZenCodeType.Method
+    @Method
     public RewardData setActions(RewardAction[] actions) {
         if(actions.length > 0) {
             List<BaseAction> baseList = Lists.newArrayList();
@@ -43,7 +46,7 @@ public class RewardData {
         return this;
     }
 
-    @ZenCodeType.Method
+    @Method
     public RewardData setAction(RewardAction action) {
         return new RewardData(this.internal.setActions(new BaseAction[]{action.getInternal()}));
     }

@@ -17,7 +17,7 @@ public class LoyaltyRewards {
 
     public LoyaltyRewards() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, LoyaltyConfig.serverSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, LoyaltyConfig.serverSpec);
         eventBus.register(LoyaltyConfig.class);
 
         MinecraftForge.EVENT_BUS.register(new LoyaltyHandler());

@@ -4,11 +4,13 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import com.mrbysco.loyaltyrewards.compat.ct.impl.RewardData;
 import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.java.ZenCodeType.Method;
+import org.openzen.zencode.java.ZenCodeType.Name;
 
 @ZenRegister
-@ZenCodeType.Name("mods.loyaltyrewards.Rewards")
+@Name("mods.loyaltyrewards.Rewards")
 public class RewardsCT {
-    @ZenCodeType.Method
+    @Method
     public static void addReward(RewardData data) {
         CraftTweakerAPI.apply(new ActionAddReward(data));
     }

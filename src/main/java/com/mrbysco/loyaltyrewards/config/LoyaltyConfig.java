@@ -22,7 +22,7 @@ public class LoyaltyConfig {
                     .push("Server");
 
             announceMethod = builder
-                    .comment("Changing this value will change how a play will know they've been rewarded [Default: CHAT].")
+                    .comment("Changing this value will change how a player will know they've been rewarded [Default: CHAT]")
                     .defineEnum("announceMethod", EnumAnnounceMethod.CHAT);
 
 //            messageColor = builder

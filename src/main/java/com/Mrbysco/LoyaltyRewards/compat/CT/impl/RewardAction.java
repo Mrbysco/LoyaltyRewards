@@ -8,11 +8,14 @@ import com.mrbysco.loyaltyrewards.registry.actions.CommandAction;
 import com.mrbysco.loyaltyrewards.registry.actions.ItemAction;
 import net.minecraft.item.ItemStack;
 import org.openzen.zencode.java.ZenCodeType;
+import org.openzen.zencode.java.ZenCodeType.Constructor;
+import org.openzen.zencode.java.ZenCodeType.Method;
+import org.openzen.zencode.java.ZenCodeType.Name;
 
 import java.util.List;
 
 @ZenRegister
-@ZenCodeType.Name("mods.loyaltyrewards.RewardAction")
+@Name("mods.loyaltyrewards.RewardAction")
 public class RewardAction {
     private final BaseAction internal;
 
@@ -20,18 +23,18 @@ public class RewardAction {
         this.internal = action;
     }
 
-    @ZenCodeType.Constructor
+    @Constructor
     public RewardAction() {
         this.internal = new BaseAction();
     }
 
-    @ZenCodeType.Method
+    @Method
     public RewardAction createItemReward(IItemStack stack) {
         BaseAction action = new ItemAction(stack.getInternal());
         return new RewardAction(action);
     }
 
-    @ZenCodeType.Method
+    @Method
     public RewardAction createItemRewards(IItemStack[] stacks) {
         List<ItemStack> stackList = Lists.newArrayList();
         for (IItemStack stack : stacks) {
@@ -45,13 +48,13 @@ public class RewardAction {
         return new RewardAction(action);
     }
 
-    @ZenCodeType.Method
+    @Method
     public RewardAction createCommandAction(String command) {
         BaseAction action = new CommandAction(command);
         return new RewardAction(action);
     }
 
-    @ZenCodeType.Method
+    @Method
     public RewardAction createCommandActions(String[] commands) {
         BaseAction action = new CommandAction(commands);
         return new RewardAction(action);

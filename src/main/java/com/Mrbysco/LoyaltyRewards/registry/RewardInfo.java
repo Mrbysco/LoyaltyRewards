@@ -6,7 +6,7 @@ import com.mrbysco.loyaltyrewards.registry.actions.IAction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class RewardInfo implements IReward {
     private final String uniqueID;
     private int rewardTime;
-    private boolean repeatable;
+    private final boolean repeatable;
     private IAction[] actions = new IAction[]{};
 
     public RewardInfo(String uniqueID, int rewardTime) {
@@ -61,19 +61,19 @@ public class RewardInfo implements IReward {
         sendRewardMessage(playerIn, getTime());
     }
 
-    public void sendRewardMessage(PlayerEntity player, int totalSeconds)
-    {
-        ITextComponent text = new TranslationTextComponent("loyaltyrewards.rewarded.message").mergeStyle(TextFormatting.YELLOW).append(secondsToString(totalSeconds));
+    public void sendRewardMessage(PlayerEntity player, int totalSeconds) {
+        IFormattableTextComponent text = new TranslationTextComponent("loyaltyrewards.rewarded.message").mergeStyle(TextFormatting.YELLOW)
+                .appendSibling(secondsToString(totalSeconds));
 
         if (LoyaltyConfig.SERVER.announceMethod.get() == EnumAnnounceMethod.STATUS) {
             player.sendStatusMessage(text, true);
         } else {
-            ITextComponent chatComponent = new StringTextComponent("[LoyaltyRewards] ").append(text);
+            IFormattableTextComponent chatComponent = new StringTextComponent("[LoyaltyRewards] ").appendSibling(text);
             player.sendMessage(chatComponent, Util.DUMMY_UUID);
         }
     }
 
-    private ITextComponent secondsToString(int totalSeconds) {
+    private IFormattableTextComponent secondsToString(int totalSeconds) {
         //Calculate the seconds to display:
         int seconds = totalSeconds % 60;
         totalSeconds -= seconds;
@@ -89,7 +89,7 @@ public class RewardInfo implements IReward {
         TextComponent minuteExtra = (TextComponent)new StringTextComponent("M").mergeStyle(TextFormatting.GOLD);
         TextComponent secondComponent = (TextComponent)new StringTextComponent(String.format(":%02d", seconds)).mergeStyle(TextFormatting.YELLOW);
         TextComponent secondExtra = (TextComponent)new StringTextComponent("S").mergeStyle(TextFormatting.GOLD);
-        return hourComponent.append(hourExtra).append(minuteComponent).append(minuteExtra).append(secondComponent).append(secondExtra);
+        return hourComponent.appendSibling(hourExtra).appendSibling(minuteComponent).appendSibling(minuteExtra).appendSibling(secondComponent).appendSibling(secondExtra);
     }
 
     @Override
