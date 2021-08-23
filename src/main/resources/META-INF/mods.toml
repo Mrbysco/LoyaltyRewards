@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[35,)"
+loaderVersion="[34,)"
 issueTrackerURL="https://github.com/Mrbysco/LoyaltyRewards/issues"
 license="MIT"
 
@@ -17,6 +17,12 @@ Rewards for playtime
 [[dependencies.loyaltyrewards]]
     modId="crafttweaker"
     mandatory=true
-    versionRange="[7.1.1.401,)"
+    versionRange="[7.0.0.48,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.loyaltyrewards]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.3,1.16.4)"
     ordering="NONE"
     side="BOTH"
