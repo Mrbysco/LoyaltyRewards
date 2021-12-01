@@ -27,13 +27,13 @@ public class CommandAction extends BaseAction {
                     rawCommand = command.replace("@PLAYERPOS", pos.getX() + " " + pos.getY() + " " + pos.getZ());
                 } else if (rawCommand.contains("@PLAYER")) {
                     String command = rawCommand;
-                    rawCommand = command.replace("@PLAYER", playerIn.getName().getUnformattedComponentText());
+                    rawCommand = command.replace("@PLAYER", playerIn.getName().getContents());
                 } else if (rawCommand.contains("@p")) {
                     String command = rawCommand;
-                    rawCommand = command.replace("@p", playerIn.getName().getUnformattedComponentText());
+                    rawCommand = command.replace("@p", playerIn.getName().getContents());
                 }
 
-                server.getCommandManager().handleCommand(server.getCommandSource(), rawCommand);
+                server.getCommands().performCommand(server.createCommandSourceStack(), rawCommand);
             }
         }
     }

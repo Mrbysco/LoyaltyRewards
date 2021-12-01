@@ -62,14 +62,14 @@ public class RewardInfo implements IReward {
     }
 
     public void sendRewardMessage(PlayerEntity player, int totalSeconds) {
-        IFormattableTextComponent text = new TranslationTextComponent("loyaltyrewards.rewarded.message").mergeStyle(TextFormatting.YELLOW)
-                .appendSibling(secondsToString(totalSeconds));
+        IFormattableTextComponent text = new TranslationTextComponent("loyaltyrewards.rewarded.message").withStyle(TextFormatting.YELLOW)
+                .append(secondsToString(totalSeconds));
 
         if (LoyaltyConfig.SERVER.announceMethod.get() == EnumAnnounceMethod.STATUS) {
-            player.sendStatusMessage(text, true);
+            player.displayClientMessage(text, true);
         } else {
-            IFormattableTextComponent chatComponent = new StringTextComponent("[LoyaltyRewards] ").appendSibling(text);
-            player.sendMessage(chatComponent, Util.DUMMY_UUID);
+            IFormattableTextComponent chatComponent = new StringTextComponent("[LoyaltyRewards] ").append(text);
+            player.sendMessage(chatComponent, Util.NIL_UUID);
         }
     }
 
@@ -83,13 +83,13 @@ public class RewardInfo implements IReward {
         minutesCount -= minutes;
         //Calculate the hours:
         long hours = minutesCount / 60;
-        TextComponent hourComponent = (TextComponent)new StringTextComponent(String.format("\n %02d", hours)).mergeStyle(TextFormatting.YELLOW);
-        TextComponent hourExtra = (TextComponent)new StringTextComponent("H").mergeStyle(TextFormatting.GOLD);
-        TextComponent minuteComponent = (TextComponent)new StringTextComponent(String.format(":%02d", minutes)).mergeStyle(TextFormatting.YELLOW);
-        TextComponent minuteExtra = (TextComponent)new StringTextComponent("M").mergeStyle(TextFormatting.GOLD);
-        TextComponent secondComponent = (TextComponent)new StringTextComponent(String.format(":%02d", seconds)).mergeStyle(TextFormatting.YELLOW);
-        TextComponent secondExtra = (TextComponent)new StringTextComponent("S").mergeStyle(TextFormatting.GOLD);
-        return hourComponent.appendSibling(hourExtra).appendSibling(minuteComponent).appendSibling(minuteExtra).appendSibling(secondComponent).appendSibling(secondExtra);
+        TextComponent hourComponent = (TextComponent)new StringTextComponent(String.format("\n %02d", hours)).withStyle(TextFormatting.YELLOW);
+        TextComponent hourExtra = (TextComponent)new StringTextComponent("H").withStyle(TextFormatting.GOLD);
+        TextComponent minuteComponent = (TextComponent)new StringTextComponent(String.format(":%02d", minutes)).withStyle(TextFormatting.YELLOW);
+        TextComponent minuteExtra = (TextComponent)new StringTextComponent("M").withStyle(TextFormatting.GOLD);
+        TextComponent secondComponent = (TextComponent)new StringTextComponent(String.format(":%02d", seconds)).withStyle(TextFormatting.YELLOW);
+        TextComponent secondExtra = (TextComponent)new StringTextComponent("S").withStyle(TextFormatting.GOLD);
+        return hourComponent.append(hourExtra).append(minuteComponent).append(minuteExtra).append(secondComponent).append(secondExtra);
     }
 
     @Override

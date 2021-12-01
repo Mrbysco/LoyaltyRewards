@@ -30,17 +30,17 @@ public class ItemAction extends BaseAction {
             for (ItemStack itemStack : stacks) {
                 ItemStack stack = itemStack.copy();
                 if (!stack.isEmpty()) {
-                    if (playerIn.addItemStackToInventory(stack)) {
-                        playerIn.world.playSound((PlayerEntity) null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((playerIn.getRNG().nextFloat() - playerIn.getRNG().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    if (playerIn.addItem(stack)) {
+                        playerIn.level.playSound((PlayerEntity) null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((playerIn.getRandom().nextFloat() - playerIn.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     } else {
-                        ITextComponent text = new TranslationTextComponent("loyaltyrewards.inventory.full").mergeStyle(TextFormatting.YELLOW);
-                        playerIn.sendMessage(text, Util.DUMMY_UUID);
+                        ITextComponent text = new TranslationTextComponent("loyaltyrewards.inventory.full").withStyle(TextFormatting.YELLOW);
+                        playerIn.sendMessage(text, Util.NIL_UUID);
 
                         ItemEntity itemEntity = EntityType.ITEM.create(worldIn);
                         if(itemEntity != null) {
                             itemEntity.setItem(stack);
-                            itemEntity.setPosition(pos.getX(), pos.getY() + 0.5, pos.getZ());
-                            worldIn.addEntity(itemEntity);
+                            itemEntity.setPos(pos.getX(), pos.getY() + 0.5, pos.getZ());
+                            worldIn.addFreshEntity(itemEntity);
                         }
                     }
                 }

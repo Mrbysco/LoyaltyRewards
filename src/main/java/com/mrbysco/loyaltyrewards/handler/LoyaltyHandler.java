@@ -18,8 +18,8 @@ public class LoyaltyHandler {
         if(event.phase == TickEvent.Phase.START)
             return;
 
-        World world = event.player.world;
-        if(!world.isRemote && world.getGameTime() % 20 == 0) {
+        World world = event.player.level;
+        if(!world.isClientSide && world.getGameTime() % 20 == 0) {
             PlayerEntity player = event.player;
             for (Map.Entry<String, RewardInfo> entry : RewardRegistry.INSTANCE.getInfoMap().entrySet()) {
                 String infoID = entry.getKey();
@@ -35,7 +35,7 @@ public class LoyaltyHandler {
                         }
                     } else {
                         if(timer >= info.getTime()) {
-                            info.trigger(world, player.getPosition(), player);
+                            info.trigger(world, player.blockPosition(), player);
                             setTime(player, infoTimerTag, -1);
                         } else {
                             int newTime = timer;
