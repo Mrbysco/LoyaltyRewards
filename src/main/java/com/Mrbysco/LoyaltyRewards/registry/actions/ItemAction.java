@@ -1,17 +1,17 @@
 package com.mrbysco.loyaltyrewards.registry.actions;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class ItemAction extends BaseAction {
     private final ItemStack[] stacks;
@@ -25,15 +25,15 @@ public class ItemAction extends BaseAction {
     }
 
     @Override
-    public void trigger(World worldIn, BlockPos pos, PlayerEntity playerIn) {
+    public void trigger(Level worldIn, BlockPos pos, Player playerIn) {
         if(stacks.length > 0) {
             for (ItemStack itemStack : stacks) {
                 ItemStack stack = itemStack.copy();
                 if (!stack.isEmpty()) {
                     if (playerIn.addItem(stack)) {
-                        playerIn.level.playSound((PlayerEntity) null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((playerIn.getRandom().nextFloat() - playerIn.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                        playerIn.level.playSound((Player) null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((playerIn.getRandom().nextFloat() - playerIn.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     } else {
-                        ITextComponent text = new TranslationTextComponent("loyaltyrewards.inventory.full").withStyle(TextFormatting.YELLOW);
+                        Component text = new TranslatableComponent("loyaltyrewards.inventory.full").withStyle(ChatFormatting.YELLOW);
                         playerIn.sendMessage(text, Util.NIL_UUID);
 
                         ItemEntity itemEntity = EntityType.ITEM.create(worldIn);

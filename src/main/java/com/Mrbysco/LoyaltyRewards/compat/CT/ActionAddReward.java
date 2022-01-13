@@ -1,6 +1,6 @@
 package com.mrbysco.loyaltyrewards.compat.ct;
 
-import com.blamejared.crafttweaker.api.actions.IUndoableAction;
+import com.blamejared.crafttweaker.api.action.base.IUndoableAction;
 import com.mrbysco.loyaltyrewards.compat.ct.impl.RewardData;
 import com.mrbysco.loyaltyrewards.registry.RewardInfo;
 import com.mrbysco.loyaltyrewards.registry.RewardRegistry;

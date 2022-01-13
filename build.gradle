@@ -15,7 +15,7 @@ version = "${version}"
 group = 'com.mrbysco.loyaltyrewards' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "LoyaltyRewards-${mc_version}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17) // Mojang ships Java 8 to end users, so your mod should target Java 8.
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
@@ -25,6 +25,8 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             // Recommended logging data for a userdev environment
             // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -40,6 +42,8 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             // Recommended logging data for a userdev environment
             // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -55,6 +59,8 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             // Recommended logging data for a userdev environment
             // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -77,15 +83,19 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-	maven {
+    maven {
+        url = "https://dvs1.progwml6.com/files/maven"
+    }
+    maven {
         url "https://maven.blamejared.com"
-	}
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${mc_version}:${crafttweaker_version}")
+    implementation fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+    implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-${mc_version}:${crafttweaker_version}")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

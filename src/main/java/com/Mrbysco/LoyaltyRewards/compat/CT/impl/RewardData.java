@@ -1,10 +1,9 @@
 package com.mrbysco.loyaltyrewards.compat.ct.impl;
 
-import com.blamejared.crafttweaker.api.annotations.ZenRegister;
+import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.google.common.collect.Lists;
 import com.mrbysco.loyaltyrewards.registry.RewardInfo;
 import com.mrbysco.loyaltyrewards.registry.actions.BaseAction;
-import org.openzen.zencode.java.ZenCodeType;
 import org.openzen.zencode.java.ZenCodeType.Constructor;
 import org.openzen.zencode.java.ZenCodeType.Method;
 import org.openzen.zencode.java.ZenCodeType.Name;

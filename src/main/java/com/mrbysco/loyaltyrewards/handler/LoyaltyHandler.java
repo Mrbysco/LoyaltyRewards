@@ -3,9 +3,9 @@ package com.mrbysco.loyaltyrewards.handler;
 import com.mrbysco.loyaltyrewards.Reference;
 import com.mrbysco.loyaltyrewards.registry.RewardInfo;
 import com.mrbysco.loyaltyrewards.registry.RewardRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -18,9 +18,9 @@ public class LoyaltyHandler {
         if(event.phase == TickEvent.Phase.START)
             return;
 
-        World world = event.player.level;
+        Level world = event.player.level;
         if(!world.isClientSide && world.getGameTime() % 20 == 0) {
-            PlayerEntity player = event.player;
+            Player player = event.player;
             for (Map.Entry<String, RewardInfo> entry : RewardRegistry.INSTANCE.getInfoMap().entrySet()) {
                 String infoID = entry.getKey();
                 String infoTimerTag = Reference.MOD_PREFIX + infoID;
@@ -50,29 +50,29 @@ public class LoyaltyHandler {
         }
     }
 
-    public static void setTime(PlayerEntity player, String valueTag, int time) {
-        CompoundNBT playerData = player.getPersistentData();
-        CompoundNBT data = getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
+    public static void setTime(Player player, String valueTag, int time) {
+        CompoundTag playerData = player.getPersistentData();
+        CompoundTag data = getTag(playerData, Player.PERSISTED_NBT_TAG);
 
         data.putInt(valueTag, time);
-        playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
+        playerData.put(Player.PERSISTED_NBT_TAG, data);
     }
 
-    public static int getTime(PlayerEntity player, String valueTag) {
-        CompoundNBT playerData = player.getPersistentData();
-        CompoundNBT data = getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
+    public static int getTime(Player player, String valueTag) {
+        CompoundTag playerData = player.getPersistentData();
+        CompoundTag data = getTag(playerData, Player.PERSISTED_NBT_TAG);
         return data.getInt(valueTag);
     }
 
-    public static boolean hasTag(PlayerEntity player, String valueTag) {
-        CompoundNBT playerData = player.getPersistentData();
-        CompoundNBT data = getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
+    public static boolean hasTag(Player player, String valueTag) {
+        CompoundTag playerData = player.getPersistentData();
+        CompoundTag data = getTag(playerData, Player.PERSISTED_NBT_TAG);
         return data.contains(valueTag);
     }
 
-    public static CompoundNBT getTag(CompoundNBT tag, String key) {
+    public static CompoundTag getTag(CompoundTag tag, String key) {
         if(tag == null || !tag.contains(key)) {
-            return new CompoundNBT();
+            return new CompoundTag();
         }
         return tag.getCompound(key);
     }

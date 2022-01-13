@@ -13,8 +13,7 @@ public class RewardRegistry {
         return this.infoMap;
     }
 
-    public void registerReward(RewardInfo reward)
-    {
+    public void registerReward(RewardInfo reward) {
         if(!infoMap.containsKey(reward.getName())) {
             infoMap.put(reward.getName(), reward);
         } else {
@@ -22,8 +21,7 @@ public class RewardRegistry {
         }
     }
 
-    public void removeReward(String rewardName)
-    {
+    public void removeReward(String rewardName) {
         if(infoMap.containsKey(rewardName)) {
             infoMap.remove(rewardName);
         } else {

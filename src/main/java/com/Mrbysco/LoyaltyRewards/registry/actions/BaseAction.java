@@ -1,12 +1,12 @@
 package com.mrbysco.loyaltyrewards.registry.actions;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public class BaseAction implements IAction {
     @Override
-    public void trigger(World worldIn, BlockPos pos, PlayerEntity playerIn) {
+    public void trigger(Level worldIn, BlockPos pos, Player playerIn) {
 
     }
 }
