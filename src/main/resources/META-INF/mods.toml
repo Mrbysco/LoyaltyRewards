@@ -1,22 +1,22 @@
-modLoader="javafml"
-loaderVersion="[38,)"
-issueTrackerURL="https://github.com/Mrbysco/LoyaltyRewards/issues"
-license="MIT"
+modLoader = "javafml"
+loaderVersion = "[38,)"
+issueTrackerURL = "https://github.com/Mrbysco/LoyaltyRewards/issues"
+license = "MIT"
 
 [[mods]]
-modId="loyaltyrewards"
-version="${file.jarVersion}"
-displayName="Loyalty Rewards"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/loyalty-rewards"
-authors="Mrbysco, ShyNieke, iskall85, DownWithTaxation"
-credits="Iskall85 for coming up with the original idea and DownWithTaxation for expanding on it"
-description='''
+modId = "loyaltyrewards"
+version = "${file.jarVersion}"
+displayName = "Loyalty Rewards"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/loyalty-rewards"
+authors = "Mrbysco, ShyNieke, iskall85, DownWithTaxation"
+credits = "Iskall85 for coming up with the original idea and DownWithTaxation for expanding on it"
+description = '''
 Rewards for playtime
 '''
 
 [[dependencies.loyaltyrewards]]
-    modId="crafttweaker"
-    mandatory=true
-    versionRange="[9.0.0+18,)"
-    ordering="NONE"
-    side="BOTH"
+modId = "crafttweaker"
+mandatory = true
+versionRange = "[9.0.81,)"
+ordering = "NONE"
+side = "BOTH"

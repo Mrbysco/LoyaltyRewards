@@ -13,13 +13,13 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(Reference.MOD_ID)
 public class LoyaltyRewards {
-    public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
+	public static final Logger LOGGER = LogManager.getLogger(Reference.MOD_ID);
 
-    public LoyaltyRewards() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, LoyaltyConfig.serverSpec);
-        eventBus.register(LoyaltyConfig.class);
+	public LoyaltyRewards() {
+		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, LoyaltyConfig.serverSpec);
+		eventBus.register(LoyaltyConfig.class);
 
-        MinecraftForge.EVENT_BUS.register(new LoyaltyHandler());
-    }
+		MinecraftForge.EVENT_BUS.register(new LoyaltyHandler());
+	}
 }

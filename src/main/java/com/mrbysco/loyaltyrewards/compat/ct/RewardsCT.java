@@ -9,8 +9,8 @@ import org.openzen.zencode.java.ZenCodeType.Name;
 @ZenRegister
 @Name("mods.loyaltyrewards.Rewards")
 public class RewardsCT {
-    @Method
-    public static void addReward(RewardData data) {
-        CraftTweakerAPI.apply(new ActionAddReward(data));
-    }
+	@Method
+	public static void addReward(RewardData data) {
+		CraftTweakerAPI.apply(new ActionAddReward(data));
+	}
 }

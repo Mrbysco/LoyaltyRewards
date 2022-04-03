@@ -16,50 +16,50 @@ import java.util.List;
 @ZenRegister
 @Name("mods.loyaltyrewards.RewardAction")
 public class RewardAction {
-    private final BaseAction internal;
+	private final BaseAction internal;
 
-    public RewardAction(BaseAction action) {
-        this.internal = action;
-    }
+	public RewardAction(BaseAction action) {
+		this.internal = action;
+	}
 
-    @Constructor
-    public RewardAction() {
-        this.internal = new BaseAction();
-    }
+	@Constructor
+	public RewardAction() {
+		this.internal = new BaseAction();
+	}
 
-    @Method
-    public RewardAction createItemReward(IItemStack stack) {
-        BaseAction action = new ItemAction(stack.getInternal());
-        return new RewardAction(action);
-    }
+	@Method
+	public RewardAction createItemReward(IItemStack stack) {
+		BaseAction action = new ItemAction(stack.getInternal());
+		return new RewardAction(action);
+	}
 
-    @Method
-    public RewardAction createItemRewards(IItemStack[] stacks) {
-        List<ItemStack> stackList = Lists.newArrayList();
-        for (IItemStack stack : stacks) {
-            ItemStack newInternal = stack.getInternal();
-            stackList.add(newInternal);
-        }
-        ItemStack[] stackArray = new ItemStack[stackList.size()];
-        stackArray = stackList.toArray(stackArray);
+	@Method
+	public RewardAction createItemRewards(IItemStack[] stacks) {
+		List<ItemStack> stackList = Lists.newArrayList();
+		for (IItemStack stack : stacks) {
+			ItemStack newInternal = stack.getInternal();
+			stackList.add(newInternal);
+		}
+		ItemStack[] stackArray = new ItemStack[stackList.size()];
+		stackArray = stackList.toArray(stackArray);
 
-        BaseAction action = new ItemAction(stackArray);
-        return new RewardAction(action);
-    }
+		BaseAction action = new ItemAction(stackArray);
+		return new RewardAction(action);
+	}
 
-    @Method
-    public RewardAction createCommandAction(String command) {
-        BaseAction action = new CommandAction(command);
-        return new RewardAction(action);
-    }
+	@Method
+	public RewardAction createCommandAction(String command) {
+		BaseAction action = new CommandAction(command);
+		return new RewardAction(action);
+	}
 
-    @Method
-    public RewardAction createCommandActions(String[] commands) {
-        BaseAction action = new CommandAction(commands);
-        return new RewardAction(action);
-    }
+	@Method
+	public RewardAction createCommandActions(String[] commands) {
+		BaseAction action = new CommandAction(commands);
+		return new RewardAction(action);
+	}
 
-    public BaseAction getInternal() {
-        return this.internal;
-    }
+	public BaseAction getInternal() {
+		return this.internal;
+	}
 }

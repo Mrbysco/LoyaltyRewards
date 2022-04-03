@@ -5,5 +5,5 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public interface IAction {
-    void trigger(Level worldIn, BlockPos pos, Player playerIn);
+	void trigger(Level worldIn, BlockPos pos, Player playerIn);
 }

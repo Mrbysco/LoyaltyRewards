@@ -13,44 +13,44 @@ import java.util.List;
 @ZenRegister
 @Name("mods.loyaltyrewards.RewardInfo")
 public class RewardData {
-    private final RewardInfo internal;
+	private final RewardInfo internal;
 
-    public RewardData(RewardInfo info) {
-        this.internal = info;
-    }
+	public RewardData(RewardInfo info) {
+		this.internal = info;
+	}
 
-    @Constructor
-    public RewardData(String uniqueID, int time) {
-        this(new RewardInfo(uniqueID, time));
-    }
+	@Constructor
+	public RewardData(String uniqueID, int time) {
+		this(new RewardInfo(uniqueID, time));
+	}
 
-    @Constructor
-    public RewardData(String uniqueID, int time, boolean repeatable) {
-        this(new RewardInfo(uniqueID, time, repeatable));
-    }
+	@Constructor
+	public RewardData(String uniqueID, int time, boolean repeatable) {
+		this(new RewardInfo(uniqueID, time, repeatable));
+	}
 
-    @Method
-    public RewardData setActions(RewardAction[] actions) {
-        if(actions.length > 0) {
-            List<BaseAction> baseList = Lists.newArrayList();
-            for (RewardAction action : actions) {
-                BaseAction newInternal = action.getInternal();
-                baseList.add(newInternal);
-            }
-            BaseAction[] criteriaArray = new BaseAction[baseList.size()];
-            criteriaArray = baseList.toArray(criteriaArray);
-            return new RewardData(this.internal.setActions(criteriaArray));
-        }
+	@Method
+	public RewardData setActions(RewardAction[] actions) {
+		if (actions.length > 0) {
+			List<BaseAction> baseList = Lists.newArrayList();
+			for (RewardAction action : actions) {
+				BaseAction newInternal = action.getInternal();
+				baseList.add(newInternal);
+			}
+			BaseAction[] criteriaArray = new BaseAction[baseList.size()];
+			criteriaArray = baseList.toArray(criteriaArray);
+			return new RewardData(this.internal.setActions(criteriaArray));
+		}
 
-        return this;
-    }
+		return this;
+	}
 
-    @Method
-    public RewardData setAction(RewardAction action) {
-        return new RewardData(this.internal.setActions(new BaseAction[]{action.getInternal()}));
-    }
+	@Method
+	public RewardData setAction(RewardAction action) {
+		return new RewardData(this.internal.setActions(new BaseAction[]{action.getInternal()}));
+	}
 
-    public RewardInfo getInternal() {
-        return this.internal;
-    }
+	public RewardInfo getInternal() {
+		return this.internal;
+	}
 }
