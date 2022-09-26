@@ -1,15 +1,15 @@
 package com.mrbysco.loyaltyrewards.handler;
 
-import com.mrbysco.loyaltyrewards.Reference;
-import com.mrbysco.loyaltyrewards.registry.RewardInfo;
-import com.mrbysco.loyaltyrewards.registry.RewardRegistry;
+import com.mrbysco.loyaltyrewards.registry.ModRegistry;
+import com.mrbysco.loyaltyrewards.reward.RewardRecipe;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.Map;
+import java.util.List;
 
 public class LoyaltyHandler {
 
@@ -18,24 +18,22 @@ public class LoyaltyHandler {
 		if (event.phase == TickEvent.Phase.START)
 			return;
 
-		Level world = event.player.level;
-		if (!world.isClientSide && world.getGameTime() % 20 == 0) {
-			Player player = event.player;
-			for (Map.Entry<String, RewardInfo> entry : RewardRegistry.INSTANCE.getInfoMap().entrySet()) {
-				String infoID = entry.getKey();
-				String infoTimerTag = Reference.MOD_PREFIX + infoID;
-				RewardInfo info = entry.getValue();
-
+		Level level = event.player.level;
+		if (!level.isClientSide && level.getGameTime() % 20 == 0) {
+			ServerPlayer player = (ServerPlayer)event.player;
+			List<RewardRecipe> rewards = level.getRecipeManager().getAllRecipesFor(ModRegistry.REWARD_RECIPE_TYPE.get());
+			for (RewardRecipe reward : rewards) {
+				String infoTimerTag = reward.getId().toString();
 				if (hasTag(player, infoTimerTag)) {
 					int timer = getTime(player, infoTimerTag);
 
 					if (timer == -1) {
-						if (info.repeatable()) {
+						if (reward.isRepeatable()) {
 							setTime(player, infoTimerTag, 2);
 						}
 					} else {
-						if (timer >= info.getTime()) {
-							info.trigger(world, player.blockPosition(), player);
+						if (timer >= reward.getTime()) {
+							reward.triggerReward(level, player.blockPosition(), player);
 							setTime(player, infoTimerTag, -1);
 						} else {
 							int newTime = timer;

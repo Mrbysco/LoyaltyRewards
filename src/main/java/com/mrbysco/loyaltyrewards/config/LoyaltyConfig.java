@@ -34,12 +34,12 @@ public class LoyaltyConfig {
 		}
 	}
 
-	public static final ForgeConfigSpec serverSpec;
+	public static final ForgeConfigSpec commonSpec;
 	public static final Server SERVER;
 
 	static {
 		final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Server::new);
-		serverSpec = specPair.getRight();
+		commonSpec = specPair.getRight();
 		SERVER = specPair.getLeft();
 	}
 
