@@ -122,7 +122,10 @@ public class RewardRecipe implements Recipe<Container> {
 	public void triggerReward(Level level, BlockPos pos, ServerPlayer player) {
 		if (!commands.isEmpty()) {
 			for (String s : commands) {
-				String rawCommand = s.substring(1, s.length() - 1);
+				String rawCommand = s;
+				if (s.startsWith("\"") && s.endsWith("\"")) {
+					rawCommand = rawCommand.substring(1, s.length() - 1);
+				}
 				if (rawCommand.contains("@PLAYERPOS")) {
 					String command = rawCommand;
 					rawCommand = command.replace("@PLAYERPOS", pos.getX() + " " + pos.getY() + " " + pos.getZ());
