@@ -53,10 +53,8 @@ public class RewardInfo implements IReward {
 
 	@Override
 	public void trigger(Level worldIn, BlockPos pos, Player playerIn) {
-		if (this.actions.length > 0) {
-			for (IAction action : actions) {
-				action.trigger(worldIn, pos, playerIn);
-			}
+		for (IAction action : actions) {
+			action.trigger(worldIn, pos, playerIn);
 		}
 		sendRewardMessage(playerIn, getTime());
 	}

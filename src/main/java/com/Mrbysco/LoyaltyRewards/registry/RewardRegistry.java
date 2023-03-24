@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class RewardRegistry {
 	public static RewardRegistry INSTANCE = new RewardRegistry();
-	private Map<String, RewardInfo> infoMap = Maps.newHashMap();
+	private final Map<String, RewardInfo> infoMap = Maps.newHashMap();
 
 	public Map<String, RewardInfo> getInfoMap() {
 		return this.infoMap;

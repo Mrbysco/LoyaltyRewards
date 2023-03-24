@@ -18,23 +18,21 @@ public class CommandAction extends BaseAction {
 
 	@Override
 	public void trigger(Level worldIn, BlockPos pos, Player playerIn) {
-		if (commands.length > 0) {
-			for (String s : commands) {
-				MinecraftServer server = playerIn.getServer();
-				String rawCommand = s;
-				if (rawCommand.contains("@PLAYERPOS")) {
-					String command = rawCommand;
-					rawCommand = command.replace("@PLAYERPOS", pos.getX() + " " + pos.getY() + " " + pos.getZ());
-				} else if (rawCommand.contains("@PLAYER")) {
-					String command = rawCommand;
-					rawCommand = command.replace("@PLAYER", playerIn.getName().getContents());
-				} else if (rawCommand.contains("@p")) {
-					String command = rawCommand;
-					rawCommand = command.replace("@p", playerIn.getName().getContents());
-				}
-
-				server.getCommands().performCommand(server.createCommandSourceStack(), rawCommand);
+		for (String s : commands) {
+			MinecraftServer server = playerIn.getServer();
+			String rawCommand = s;
+			if (rawCommand.contains("@PLAYERPOS")) {
+				String command = rawCommand;
+				rawCommand = command.replace("@PLAYERPOS", pos.getX() + " " + pos.getY() + " " + pos.getZ());
+			} else if (rawCommand.contains("@PLAYER")) {
+				String command = rawCommand;
+				rawCommand = command.replace("@PLAYER", playerIn.getName().getContents());
+			} else if (rawCommand.contains("@p")) {
+				String command = rawCommand;
+				rawCommand = command.replace("@p", playerIn.getName().getContents());
 			}
+
+			server.getCommands().performCommand(server.createCommandSourceStack(), rawCommand);
 		}
 	}
 }
