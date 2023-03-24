@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -91,8 +92,8 @@ public class RewardRecipe implements Recipe<Container> {
 	}
 
 	@Override
-	public ItemStack assemble(Container inventory) {
-		return getResultItem();
+	public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+		return getResultItem(registryAccess);
 	}
 
 	@Override
@@ -105,7 +106,7 @@ public class RewardRecipe implements Recipe<Container> {
 	}
 
 	@Override
-	public ItemStack getResultItem() {
+	public ItemStack getResultItem(RegistryAccess registryAccess) {
 		return ItemStack.EMPTY;
 	}
 
