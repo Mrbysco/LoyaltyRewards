@@ -27,9 +27,9 @@ public class RewardManager implements IRecipeManager<RewardRecipe> {
 	public void addReward(String name, int time, boolean repeatable, IItemStack[] stacks, String[] commands) {
 		final ResourceLocation id = new ResourceLocation("crafttweaker", name);
 		final NonNullList<ItemStack> stackList = NonNullList.create();
-		Arrays.stream(stacks).map(IItemStack::getInternal).toList().forEach(stackList::add);
+		stackList.addAll(Arrays.stream(stacks).map(IItemStack::getInternal).toList());
 		final NonNullList<String> commandList = NonNullList.create();
-		Arrays.stream(commands).forEach(commandList::add);
+		commandList.addAll(Arrays.asList(commands));
 
 		final RewardRecipe recipe = new RewardRecipe(id, "", time, repeatable, stackList, commandList);
 		CraftTweakerAPI.apply(new ActionAddRecipe<>(this, recipe));
@@ -40,7 +40,7 @@ public class RewardManager implements IRecipeManager<RewardRecipe> {
 	public void addItemReward(String name, int time, boolean repeatable, IItemStack[] stacks) {
 		final ResourceLocation id = new ResourceLocation("crafttweaker", name);
 		final NonNullList<ItemStack> stackList = NonNullList.create();
-		Arrays.stream(stacks).map(IItemStack::getInternal).toList().forEach(stackList::add);
+		stackList.addAll(Arrays.stream(stacks).map(IItemStack::getInternal).toList());
 		final NonNullList<String> commandList = NonNullList.create();
 		final RewardRecipe recipe = new RewardRecipe(id, "", time, repeatable, stackList, commandList);
 		CraftTweakerAPI.apply(new ActionAddRecipe<>(this, recipe));
@@ -51,7 +51,7 @@ public class RewardManager implements IRecipeManager<RewardRecipe> {
 		final ResourceLocation id = new ResourceLocation("crafttweaker", name);
 		final NonNullList<ItemStack> stackList = NonNullList.create();
 		final NonNullList<String> commandList = NonNullList.create();
-		Arrays.stream(commands).forEach(commandList::add);
+		commandList.addAll(Arrays.asList(commands));
 		final RewardRecipe recipe = new RewardRecipe(id, "", time, repeatable, stackList, commandList);
 		CraftTweakerAPI.apply(new ActionAddRecipe<>(this, recipe));
 	}
