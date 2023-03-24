@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[41,)"
+loaderVersion = "[44,)"
 issueTrackerURL = "https://github.com/Mrbysco/LoyaltyRewards/issues"
 license = "MIT"
 
@@ -14,9 +14,9 @@ description = '''
 Rewards for playtime
 '''
 
-#[[dependencies.loyaltyrewards]]
-#modId = "crafttweaker"
-#mandatory = true
-#versionRange = "[9.1.85,)"
-#ordering = "NONE"
-#side = "BOTH"
+[[dependencies.loyaltyrewards]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.19.3,1.20)"
+ordering="NONE"
+side="BOTH"
