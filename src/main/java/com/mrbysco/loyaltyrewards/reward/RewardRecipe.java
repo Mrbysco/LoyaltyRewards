@@ -146,7 +146,7 @@ public class RewardRecipe implements Recipe<Container> {
 			ItemStack stack = itemStack.copy();
 			if (!stack.isEmpty()) {
 				if (player.addItem(stack)) {
-					player.level.playSound((Player) null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
+					player.level().playSound((Player) null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
 							0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
 				} else {
 					Component text = Component.translatable("loyaltyrewards.inventory.full").withStyle(ChatFormatting.YELLOW);
@@ -165,8 +165,8 @@ public class RewardRecipe implements Recipe<Container> {
 	}
 
 	private CommandSourceStack createCommandSourceStack(@Nullable ServerPlayer serverPlayer, String command) {
-		MinecraftServer server = serverPlayer.getLevel().getServer();
-		ServerLevel serverLevel = server.getLevel(Level.OVERWORLD);
+		MinecraftServer server = serverPlayer.level().getServer();
+		ServerLevel serverLevel = server.overworld();
 		String s = serverPlayer == null ? "LoyaltyReward" : serverPlayer.getName().getString();
 		Component component = (Component) (serverPlayer == null ? Component.literal("LoyaltyReward") : serverPlayer.getDisplayName());
 		return new CommandSourceStack(server, Vec3.atCenterOf(serverPlayer.blockPosition()), Vec2.ZERO, serverLevel, 4,

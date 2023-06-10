@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[44,)"
+loaderVersion = "[46,)"
 issueTrackerURL = "https://github.com/Mrbysco/LoyaltyRewards/issues"
 license = "MIT"
 
@@ -17,6 +17,6 @@ Rewards for playtime
 [[dependencies.loyaltyrewards]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.19.3,1.20)"
+versionRange="[1.20,1.21)"
 ordering="NONE"
 side="BOTH"

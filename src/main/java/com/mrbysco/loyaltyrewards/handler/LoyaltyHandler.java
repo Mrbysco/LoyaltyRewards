@@ -18,7 +18,7 @@ public class LoyaltyHandler {
 		if (event.phase == TickEvent.Phase.START)
 			return;
 
-		Level level = event.player.level;
+		Level level = event.player.level();
 		if (!level.isClientSide && level.getGameTime() % 20 == 0) {
 			ServerPlayer player = (ServerPlayer)event.player;
 			List<RewardRecipe> rewards = level.getRecipeManager().getAllRecipesFor(ModRegistry.REWARD_RECIPE_TYPE.get());
