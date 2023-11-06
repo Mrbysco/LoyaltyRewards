@@ -1,0 +1,1 @@
+* Fix serialization bug preventing connecting to servers with this mod installed
