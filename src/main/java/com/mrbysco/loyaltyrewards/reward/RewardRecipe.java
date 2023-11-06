@@ -229,14 +229,15 @@ public class RewardRecipe implements Recipe<Container> {
 		@Override
 		public RewardRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			String s = buffer.readUtf();
-			int i = buffer.readVarInt();
-			NonNullList<ItemStack> resultItems = NonNullList.withSize(i, ItemStack.EMPTY);
 
+			int itemSize = buffer.readVarInt();
+			NonNullList<ItemStack> resultItems = NonNullList.withSize(itemSize, ItemStack.EMPTY);
 			for (int j = 0; j < resultItems.size(); ++j) {
 				resultItems.set(j, buffer.readItem());
 			}
-			NonNullList<String> resultCommands = NonNullList.withSize(i, "");
 
+			int commandSize = buffer.readVarInt();
+			NonNullList<String> resultCommands = NonNullList.withSize(commandSize, "");
 			for (int j = 0; j < resultCommands.size(); ++j) {
 				resultCommands.set(j, buffer.readUtf());
 			}
