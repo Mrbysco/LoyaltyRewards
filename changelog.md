@@ -1,1 +1,1 @@
-* Initial update to 1.19.3
+* Fix serialization bug preventing connecting to servers with this mod installed
