@@ -1,1 +1,1 @@
-* Re-enable crafttweaker support
+* Fix serialization bug preventing connecting to servers with this mod installed
