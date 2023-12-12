@@ -1,9 +1,8 @@
 package com.mrbysco.loyaltyrewards.reward;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mrbysco.loyaltyrewards.registry.ModRegistry;
 import com.mrbysco.loyaltyrewards.util.RewardUtil;
 import net.minecraft.ChatFormatting;
@@ -13,40 +12,36 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipeCodecs;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.annotation.Nullable;
 
 public class RewardRecipe implements Recipe<Container> {
-	protected final ResourceLocation id;
-	protected final String name;
-
 	private final int time;
 	private final boolean repeatable;
 
 	private final NonNullList<ItemStack> stacks;
 	private final NonNullList<String> commands;
 
-	public RewardRecipe(ResourceLocation id, String name, int time, boolean repeatable, NonNullList<ItemStack> stacks, NonNullList<String> commands) {
-		this.id = id;
-		this.name = name;
+	public RewardRecipe(int time, boolean repeatable, NonNullList<ItemStack> stacks, NonNullList<String> commands) {
 		this.time = time;
 		this.repeatable = repeatable;
 		this.stacks = stacks;
@@ -94,15 +89,6 @@ public class RewardRecipe implements Recipe<Container> {
 	@Override
 	public ItemStack assemble(Container container, RegistryAccess registryAccess) {
 		return getResultItem(registryAccess);
-	}
-
-	@Override
-	public ResourceLocation getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	@Override
@@ -178,58 +164,27 @@ public class RewardRecipe implements Recipe<Container> {
 		return true;
 	}
 
-	public static class RewardRecipeSerializer implements RecipeSerializer<RewardRecipe> {
+	public static class Serializer implements RecipeSerializer<RewardRecipe> {
+
+		private static final Codec<RewardRecipe> CODEC = RawRewardRecipe.CODEC.flatXmap(rawRewardRecipe -> {
+			return DataResult.success(new RewardRecipe(
+					rawRewardRecipe.time,
+					rawRewardRecipe.repeatable,
+					rawRewardRecipe.stacks,
+					rawRewardRecipe.commands
+			));
+		}, recipe -> {
+			throw new NotImplementedException("Serializing RewardRecipe is not implemented yet.");
+		});
+
 		@Override
-		public RewardRecipe fromJson(ResourceLocation recipeId, JsonObject jsonObject) {
-			String s = GsonHelper.getAsString(jsonObject, "name", "");
-
-			NonNullList<ItemStack> resultItems = stacksFromJson(GsonHelper.getAsJsonArray(jsonObject, "stacks"));
-			NonNullList<String> resultCommands = commandsFromJson(GsonHelper.getAsJsonArray(jsonObject, "commands"));
-
-			int time = GsonHelper.getAsInt(jsonObject, "time", 60);
-			boolean repeatable = GsonHelper.getAsBoolean(jsonObject, "repeatable", false);
-			return new RewardRecipe(recipeId, s, time, repeatable, resultItems, resultCommands);
-		}
-
-		private static NonNullList<ItemStack> stacksFromJson(JsonArray stacksArray) {
-			NonNullList<ItemStack> nonnulllist = NonNullList.create();
-
-			for (int i = 0; i < stacksArray.size(); ++i) {
-				JsonElement element = stacksArray.get(i);
-				if (element.isJsonObject()) {
-					JsonObject object = element.getAsJsonObject();
-					ItemStack stack = net.minecraftforge.common.crafting.CraftingHelper.getItemStack(object, true, true);
-
-					if (!stack.isEmpty())
-						nonnulllist.add(stack);
-				} else {
-					throw new JsonParseException("Expected a JSON object");
-				}
-			}
-
-			return nonnulllist;
-		}
-
-		private static NonNullList<String> commandsFromJson(JsonArray commandArray) {
-			NonNullList<String> nonnulllist = NonNullList.create();
-
-			for (int i = 0; i < commandArray.size(); ++i) {
-				String command = commandArray.get(i).toString();
-				if (!command.isEmpty()) {
-					nonnulllist.add(command);
-				} else {
-					throw new JsonParseException("Unexpected empty command");
-				}
-			}
-
-			return nonnulllist;
+		public Codec<RewardRecipe> codec() {
+			return CODEC;
 		}
 
 		@Nullable
 		@Override
-		public RewardRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-			String s = buffer.readUtf();
-
+		public RewardRecipe fromNetwork(FriendlyByteBuf buffer) {
 			int itemSize = buffer.readVarInt();
 			NonNullList<ItemStack> resultItems = NonNullList.withSize(itemSize, ItemStack.EMPTY);
 			for (int j = 0; j < resultItems.size(); ++j) {
@@ -244,13 +199,11 @@ public class RewardRecipe implements Recipe<Container> {
 
 			boolean repeatable = buffer.readBoolean();
 			int time = buffer.readInt();
-			return new RewardRecipe(recipeId, s, time, repeatable, resultItems, resultCommands);
+			return new RewardRecipe(time, repeatable, resultItems, resultCommands);
 		}
 
 		@Override
 		public void toNetwork(FriendlyByteBuf buffer, RewardRecipe recipe) {
-			buffer.writeUtf(recipe.name);
-
 			buffer.writeVarInt(recipe.stacks.size());
 
 			for (ItemStack stack : recipe.stacks) {
@@ -264,6 +217,43 @@ public class RewardRecipe implements Recipe<Container> {
 			}
 			buffer.writeBoolean(recipe.repeatable);
 			buffer.writeInt(recipe.time);
+		}
+
+		static record RawRewardRecipe(
+				int time, boolean repeatable, NonNullList<ItemStack> stacks, NonNullList<String> commands
+		) {
+			public static final Codec<RawRewardRecipe> CODEC = RecordCodecBuilder.create(
+					instance -> instance.group(
+									Codec.INT.optionalFieldOf("time", 60).forGetter(recipe -> recipe.time),
+									Codec.BOOL.optionalFieldOf("repeatable", false).forGetter(recipe -> recipe.repeatable),
+									CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC
+											.listOf()
+											.fieldOf("stacks")
+											.flatXmap(
+													array -> {
+														ItemStack[] aitemstack = array
+																.toArray(ItemStack[]::new);
+														return DataResult.success(NonNullList.of(ItemStack.EMPTY, aitemstack));
+													},
+													DataResult::success
+											)
+											.forGetter(recipe -> recipe.stacks),
+
+									Codec.STRING
+											.listOf()
+											.fieldOf("commands")
+											.flatXmap(
+													array -> {
+														String[] acommand = array
+																.toArray(String[]::new);
+														return DataResult.success(NonNullList.of("", acommand));
+													},
+													DataResult::success
+											)
+											.forGetter(recipe -> recipe.commands)
+							)
+							.apply(instance, RawRewardRecipe::new)
+			);
 		}
 	}
 }

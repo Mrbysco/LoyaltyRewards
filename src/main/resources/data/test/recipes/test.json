@@ -1,0 +1,19 @@
+{
+  "type": "loyaltyrewards:reward_recipe",
+  "stacks": [
+    {
+      "count": 4,
+      "item": "minecraft:apple"
+    },
+    {
+      "count": 2,
+      "item": "minecraft:bread"
+    }
+  ],
+  "commands": [
+    "/execute as @s run me Says hi",
+    "/execute as @s run me Says I'm a pineapple"
+  ],
+  "repeatable": true,
+  "time": 15
+}

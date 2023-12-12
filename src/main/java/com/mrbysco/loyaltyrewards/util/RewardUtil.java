@@ -10,10 +10,10 @@ import net.minecraft.world.entity.player.Player;
 public class RewardUtil {
 
 	public static void sendRewardMessage(Player player, int totalSeconds) {
-		MutableComponent text = Component.translatable("loyaltyrewards.rewarded.message").withStyle(LoyaltyConfig.SERVER.messageColor.get())
+		MutableComponent text = Component.translatable("loyaltyrewards.rewarded.message").withStyle(LoyaltyConfig.COMMON.messageColor.get())
 				.append(secondsToString(totalSeconds));
 
-		if (LoyaltyConfig.SERVER.announceMethod.get() == EnumAnnounceMethod.STATUS) {
+		if (LoyaltyConfig.COMMON.announceMethod.get() == EnumAnnounceMethod.STATUS) {
 			player.displayClientMessage(text, true);
 		} else {
 			MutableComponent chatComponent = Component.literal("[LoyaltyRewards] ").append(text);

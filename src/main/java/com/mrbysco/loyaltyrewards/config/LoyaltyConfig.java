@@ -2,10 +2,9 @@ package com.mrbysco.loyaltyrewards.config;
 
 import com.mrbysco.loyaltyrewards.LoyaltyRewards;
 import net.minecraft.ChatFormatting;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class LoyaltyConfig {
@@ -14,11 +13,11 @@ public class LoyaltyConfig {
 		STATUS
 	}
 
-	public static class Server {
-		public final EnumValue<EnumAnnounceMethod> announceMethod;
-		public final EnumValue<ChatFormatting> messageColor;
+	public static class Common {
+		public final ModConfigSpec.EnumValue<EnumAnnounceMethod> announceMethod;
+		public final ModConfigSpec.EnumValue<ChatFormatting> messageColor;
 
-		Server(ForgeConfigSpec.Builder builder) {
+		Common(ModConfigSpec.Builder builder) {
 			builder.comment("Server settings")
 					.push("Server");
 
@@ -34,13 +33,13 @@ public class LoyaltyConfig {
 		}
 	}
 
-	public static final ForgeConfigSpec commonSpec;
-	public static final Server SERVER;
+	public static final ModConfigSpec commonSpec;
+	public static final Common COMMON;
 
 	static {
-		final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Server::new);
+		final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Common::new);
 		commonSpec = specPair.getRight();
-		SERVER = specPair.getLeft();
+		COMMON = specPair.getLeft();
 	}
 
 	@SubscribeEvent

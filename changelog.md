@@ -1,1 +1,1 @@
-* Fix serialization bug preventing connecting to servers with this mod installed
+* Initial update to 1.20.2 (NeoForge)

@@ -5,9 +5,10 @@ import com.mrbysco.loyaltyrewards.reward.RewardRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
 
 import java.util.List;
 
@@ -20,11 +21,12 @@ public class LoyaltyHandler {
 
 		Level level = event.player.level();
 		if (!level.isClientSide && level.getGameTime() % 20 == 0) {
-			ServerPlayer player = (ServerPlayer)event.player;
-			List<RewardRecipe> rewards = level.getRecipeManager().getAllRecipesFor(ModRegistry.REWARD_RECIPE_TYPE.get());
-			for (RewardRecipe reward : rewards) {
-				String infoTimerTag = reward.getId().toString();
+			ServerPlayer player = (ServerPlayer) event.player;
+			List<RecipeHolder<RewardRecipe>> rewards = level.getRecipeManager().getAllRecipesFor(ModRegistry.REWARD_RECIPE_TYPE.get());
+			for (RecipeHolder<RewardRecipe> rewardHolder : rewards) {
+				String infoTimerTag = rewardHolder.id().toString();
 				if (hasTag(player, infoTimerTag)) {
+					RewardRecipe reward = rewardHolder.value();
 					int timer = getTime(player, infoTimerTag);
 
 					if (timer == -1) {
