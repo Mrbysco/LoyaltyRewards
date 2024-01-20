@@ -125,7 +125,7 @@ if (System.getenv().CURSEFORGE_KEY) {
         mainFile.changelogType = 'markdown'
 
 //        mainFile.addRequirement()
-//        mainFile.addOptional("crafttweaker")
+        mainFile.addOptional("crafttweaker")
     }
 }
 
@@ -141,9 +141,9 @@ if (System.getenv().MODRINTH_KEY) {
         gameVersions = ["${mc_version}"]
         loaders = ["neoforge"]
 
-//        dependencies {
-//            optional.project "crafttweaker"
-//        }
+        dependencies {
+            optional.project "crafttweaker"
+        }
     }
 }
 
