@@ -72,7 +72,7 @@ dependencies {
 
     runtimeOnly "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
 
-    implementation "com.blamejared.crafttweaker:CraftTweaker-forge-${mc_version}:${crafttweaker_version}"
+    implementation "com.blamejared.crafttweaker:CraftTweaker-neoforge-${mc_version}:${crafttweaker_version}"
 }
 
 jar {
