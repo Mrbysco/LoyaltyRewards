@@ -17,20 +17,17 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipeCodecs;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import org.apache.commons.lang3.NotImplementedException;
 
 import javax.annotation.Nullable;
 
@@ -166,16 +163,38 @@ public class RewardRecipe implements Recipe<Container> {
 
 	public static class Serializer implements RecipeSerializer<RewardRecipe> {
 
-		private static final Codec<RewardRecipe> CODEC = RawRewardRecipe.CODEC.flatXmap(rawRewardRecipe -> {
-			return DataResult.success(new RewardRecipe(
-					rawRewardRecipe.time,
-					rawRewardRecipe.repeatable,
-					rawRewardRecipe.stacks,
-					rawRewardRecipe.commands
-			));
-		}, recipe -> {
-			throw new NotImplementedException("Serializing RewardRecipe is not implemented yet.");
-		});
+		public static final Codec<RewardRecipe> CODEC = RecordCodecBuilder.create(
+				instance -> instance.group(
+								Codec.INT.optionalFieldOf("time", 60).forGetter(recipe -> recipe.time),
+								Codec.BOOL.optionalFieldOf("repeatable", false).forGetter(recipe -> recipe.repeatable),
+								ItemStack.ITEM_WITH_COUNT_CODEC
+										.listOf()
+										.fieldOf("stacks")
+										.flatXmap(
+												array -> {
+													ItemStack[] aitemstack = array
+															.toArray(ItemStack[]::new);
+													return DataResult.success(NonNullList.of(ItemStack.EMPTY, aitemstack));
+												},
+												DataResult::success
+										)
+										.forGetter(recipe -> recipe.stacks),
+
+								Codec.STRING
+										.listOf()
+										.fieldOf("commands")
+										.flatXmap(
+												array -> {
+													String[] acommand = array
+															.toArray(String[]::new);
+													return DataResult.success(NonNullList.of("", acommand));
+												},
+												DataResult::success
+										)
+										.forGetter(recipe -> recipe.commands)
+						)
+						.apply(instance, RewardRecipe::new)
+		);
 
 		@Override
 		public Codec<RewardRecipe> codec() {
@@ -217,43 +236,6 @@ public class RewardRecipe implements Recipe<Container> {
 			}
 			buffer.writeBoolean(recipe.repeatable);
 			buffer.writeInt(recipe.time);
-		}
-
-		static record RawRewardRecipe(
-				int time, boolean repeatable, NonNullList<ItemStack> stacks, NonNullList<String> commands
-		) {
-			public static final Codec<RawRewardRecipe> CODEC = RecordCodecBuilder.create(
-					instance -> instance.group(
-									Codec.INT.optionalFieldOf("time", 60).forGetter(recipe -> recipe.time),
-									Codec.BOOL.optionalFieldOf("repeatable", false).forGetter(recipe -> recipe.repeatable),
-									CraftingRecipeCodecs.ITEMSTACK_OBJECT_CODEC
-											.listOf()
-											.fieldOf("stacks")
-											.flatXmap(
-													array -> {
-														ItemStack[] aitemstack = array
-																.toArray(ItemStack[]::new);
-														return DataResult.success(NonNullList.of(ItemStack.EMPTY, aitemstack));
-													},
-													DataResult::success
-											)
-											.forGetter(recipe -> recipe.stacks),
-
-									Codec.STRING
-											.listOf()
-											.fieldOf("commands")
-											.flatXmap(
-													array -> {
-														String[] acommand = array
-																.toArray(String[]::new);
-														return DataResult.success(NonNullList.of("", acommand));
-													},
-													DataResult::success
-											)
-											.forGetter(recipe -> recipe.commands)
-							)
-							.apply(instance, RawRewardRecipe::new)
-			);
 		}
 	}
 }
