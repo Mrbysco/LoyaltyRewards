@@ -2,16 +2,18 @@ package com.mrbysco.loyaltyrewards.reward;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mrbysco.loyaltyrewards.registry.ModRegistry;
 import com.mrbysco.loyaltyrewards.util.RewardUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -84,12 +86,12 @@ public class RewardRecipe implements Recipe<Container> {
 	}
 
 	@Override
-	public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+	public ItemStack assemble(Container container, HolderLookup.Provider registryAccess) {
 		return getResultItem(registryAccess);
 	}
 
 	@Override
-	public ItemStack getResultItem(RegistryAccess registryAccess) {
+	public ItemStack getResultItem(HolderLookup.Provider registryAccess) {
 		return ItemStack.EMPTY;
 	}
 
@@ -163,11 +165,11 @@ public class RewardRecipe implements Recipe<Container> {
 
 	public static class Serializer implements RecipeSerializer<RewardRecipe> {
 
-		public static final Codec<RewardRecipe> CODEC = RecordCodecBuilder.create(
+		public static final MapCodec<RewardRecipe> CODEC = RecordCodecBuilder.mapCodec(
 				instance -> instance.group(
 								Codec.INT.optionalFieldOf("time", 60).forGetter(recipe -> recipe.time),
 								Codec.BOOL.optionalFieldOf("repeatable", false).forGetter(recipe -> recipe.repeatable),
-								ItemStack.ITEM_WITH_COUNT_CODEC
+								ItemStack.STRICT_CODEC
 										.listOf()
 										.fieldOf("stacks")
 										.flatXmap(
@@ -195,19 +197,25 @@ public class RewardRecipe implements Recipe<Container> {
 						)
 						.apply(instance, RewardRecipe::new)
 		);
+		public static final StreamCodec<RegistryFriendlyByteBuf, RewardRecipe> STREAM_CODEC = StreamCodec.of(
+				RewardRecipe.Serializer::toNetwork, RewardRecipe.Serializer::fromNetwork
+		);
 
 		@Override
-		public Codec<RewardRecipe> codec() {
+		public MapCodec<RewardRecipe> codec() {
 			return CODEC;
 		}
 
-		@Nullable
 		@Override
-		public RewardRecipe fromNetwork(FriendlyByteBuf buffer) {
+		public StreamCodec<RegistryFriendlyByteBuf, RewardRecipe> streamCodec() {
+			return STREAM_CODEC;
+		}
+
+		public static RewardRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
 			int itemSize = buffer.readVarInt();
 			NonNullList<ItemStack> resultItems = NonNullList.withSize(itemSize, ItemStack.EMPTY);
 			for (int j = 0; j < resultItems.size(); ++j) {
-				resultItems.set(j, buffer.readItem());
+				resultItems.set(j, ItemStack.STREAM_CODEC.decode(buffer));
 			}
 
 			int commandSize = buffer.readVarInt();
@@ -221,12 +229,11 @@ public class RewardRecipe implements Recipe<Container> {
 			return new RewardRecipe(time, repeatable, resultItems, resultCommands);
 		}
 
-		@Override
-		public void toNetwork(FriendlyByteBuf buffer, RewardRecipe recipe) {
+		public static void toNetwork(RegistryFriendlyByteBuf buffer, RewardRecipe recipe) {
 			buffer.writeVarInt(recipe.stacks.size());
 
 			for (ItemStack stack : recipe.stacks) {
-				buffer.writeItem(stack);
+				ItemStack.STREAM_CODEC.encode(buffer, stack);
 			}
 
 			buffer.writeVarInt(recipe.commands.size());

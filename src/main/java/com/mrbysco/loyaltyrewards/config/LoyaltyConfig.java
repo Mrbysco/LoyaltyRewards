@@ -13,11 +13,11 @@ public class LoyaltyConfig {
 		STATUS
 	}
 
-	public static class Common {
+	public static class Server {
 		public final ModConfigSpec.EnumValue<EnumAnnounceMethod> announceMethod;
 		public final ModConfigSpec.EnumValue<ChatFormatting> messageColor;
 
-		Common(ModConfigSpec.Builder builder) {
+		Server(ModConfigSpec.Builder builder) {
 			builder.comment("Server settings")
 					.push("Server");
 
@@ -33,13 +33,13 @@ public class LoyaltyConfig {
 		}
 	}
 
-	public static final ModConfigSpec commonSpec;
-	public static final Common COMMON;
+	public static final ModConfigSpec serverSpec;
+	public static final Server SERVER;
 
 	static {
-		final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Common::new);
-		commonSpec = specPair.getRight();
-		COMMON = specPair.getLeft();
+		final Pair<Server, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Server::new);
+		serverSpec = specPair.getRight();
+		SERVER = specPair.getLeft();
 	}
 
 	@SubscribeEvent

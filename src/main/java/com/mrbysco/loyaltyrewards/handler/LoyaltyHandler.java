@@ -8,43 +8,40 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.List;
 
 public class LoyaltyHandler {
 
 	@SubscribeEvent
-	public void serverTick(TickEvent.PlayerTickEvent event) {
-		if (event.phase == TickEvent.Phase.START)
-			return;
-
-		Level level = event.player.level();
-		if (!level.isClientSide && level.getGameTime() % 20 == 0) {
-			ServerPlayer player = (ServerPlayer) event.player;
+	public void serverTick(PlayerTickEvent.Post event) {
+		Player player = event.getEntity();
+		Level level = player.level();
+		if (player instanceof ServerPlayer serverPlayer && level.getGameTime() % 20 == 0) {
 			List<RecipeHolder<RewardRecipe>> rewards = level.getRecipeManager().getAllRecipesFor(ModRegistry.REWARD_RECIPE_TYPE.get());
 			for (RecipeHolder<RewardRecipe> rewardHolder : rewards) {
 				String infoTimerTag = rewardHolder.id().toString();
-				if (hasTag(player, infoTimerTag)) {
+				if (hasTag(serverPlayer, infoTimerTag)) {
 					RewardRecipe reward = rewardHolder.value();
-					int timer = getTime(player, infoTimerTag);
+					int timer = getTime(serverPlayer, infoTimerTag);
 
 					if (timer == -1) {
 						if (reward.isRepeatable()) {
-							setTime(player, infoTimerTag, 2);
+							setTime(serverPlayer, infoTimerTag, 2);
 						}
 					} else {
 						if (timer >= reward.getTime()) {
-							reward.triggerReward(level, player.blockPosition(), player);
-							setTime(player, infoTimerTag, -1);
+							reward.triggerReward(level, serverPlayer.blockPosition(), serverPlayer);
+							setTime(serverPlayer, infoTimerTag, -1);
 						} else {
 							int newTime = timer;
 							newTime++;
-							setTime(player, infoTimerTag, newTime);
+							setTime(serverPlayer, infoTimerTag, newTime);
 						}
 					}
 				} else {
-					setTime(player, infoTimerTag, 1);
+					setTime(serverPlayer, infoTimerTag, 1);
 				}
 			}
 		}
