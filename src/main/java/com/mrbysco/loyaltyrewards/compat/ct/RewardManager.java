@@ -26,7 +26,7 @@ public class RewardManager implements IRecipeManager<RewardRecipe> {
 
 	@ZenCodeType.Method
 	public void addReward(String name, int time, boolean repeatable, IItemStack[] stacks, String[] commands) {
-		final ResourceLocation id = new ResourceLocation("crafttweaker", name);
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath("crafttweaker", name);
 		final NonNullList<ItemStack> stackList = NonNullList.create();
 		stackList.addAll(Arrays.stream(stacks).map(IItemStack::getInternal).toList());
 		final NonNullList<String> commandList = NonNullList.create();
@@ -40,7 +40,7 @@ public class RewardManager implements IRecipeManager<RewardRecipe> {
 
 	@ZenCodeType.Method
 	public void addItemReward(String name, int time, boolean repeatable, IItemStack[] stacks) {
-		final ResourceLocation id = new ResourceLocation("crafttweaker", name);
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath("crafttweaker", name);
 		final NonNullList<ItemStack> stackList = NonNullList.create();
 		stackList.addAll(Arrays.stream(stacks).map(IItemStack::getInternal).toList());
 		final NonNullList<String> commandList = NonNullList.create();
@@ -51,7 +51,7 @@ public class RewardManager implements IRecipeManager<RewardRecipe> {
 
 	@ZenCodeType.Method
 	public void addCommandReward(String name, int time, boolean repeatable, String[] commands) {
-		final ResourceLocation id = new ResourceLocation("crafttweaker", name);
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath("crafttweaker", name);
 		final NonNullList<ItemStack> stackList = NonNullList.create();
 		final NonNullList<String> commandList = NonNullList.create();
 		commandList.addAll(Arrays.asList(commands));

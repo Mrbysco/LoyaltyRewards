@@ -19,12 +19,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -33,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
-public class RewardRecipe implements Recipe<Container> {
+public class RewardRecipe implements Recipe<RecipeInput> {
 	private final int time;
 	private final boolean repeatable;
 
@@ -81,12 +81,12 @@ public class RewardRecipe implements Recipe<Container> {
 	}
 
 	@Override
-	public boolean matches(Container inv, Level level) {
+	public boolean matches(RecipeInput input, Level level) {
 		return false;
 	}
 
 	@Override
-	public ItemStack assemble(Container container, HolderLookup.Provider registryAccess) {
+	public ItemStack assemble(RecipeInput input, HolderLookup.Provider registryAccess) {
 		return getResultItem(registryAccess);
 	}
 

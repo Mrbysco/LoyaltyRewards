@@ -3,11 +3,11 @@
   "stacks": [
     {
       "count": 4,
-      "item": "minecraft:apple"
+      "id": "minecraft:apple"
     },
     {
       "count": 2,
-      "item": "minecraft:bread"
+      "id": "minecraft:bread"
     }
   ],
   "commands": [

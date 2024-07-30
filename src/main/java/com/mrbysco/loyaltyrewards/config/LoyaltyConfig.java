@@ -2,9 +2,9 @@ package com.mrbysco.loyaltyrewards.config;
 
 import com.mrbysco.loyaltyrewards.LoyaltyRewards;
 import net.minecraft.ChatFormatting;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class LoyaltyConfig {
@@ -26,7 +26,7 @@ public class LoyaltyConfig {
 					.defineEnum("announceMethod", EnumAnnounceMethod.CHAT);
 
 			messageColor = builder
-					.comment("Changing this value will change the color of the message the player receives when being rewarded for playing [Default: YELLOW].")
+					.comment("Changing this value will change the color of the message the player receives when being rewarded for playing [Default: YELLOW]")
 					.defineEnum("messageColor", ChatFormatting.YELLOW);
 
 			builder.pop();
