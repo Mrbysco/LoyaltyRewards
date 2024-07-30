@@ -1,1 +1,1 @@
-* Remove test recipe
+* Initial update to 1.20.6
