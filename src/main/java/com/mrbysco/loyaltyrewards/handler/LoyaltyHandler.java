@@ -19,7 +19,7 @@ public class LoyaltyHandler {
 		Player player = event.getEntity();
 		Level level = player.level();
 		if (player instanceof ServerPlayer serverPlayer && level.getGameTime() % 20 == 0) {
-			Collection<RecipeHolder<RewardRecipe>> rewards = serverPlayer.serverLevel().recipeAccess().recipeMap().byType(ModRegistry.REWARD_RECIPE_TYPE.get());
+			Collection<RecipeHolder<RewardRecipe>> rewards = serverPlayer.level().recipeAccess().recipeMap().byType(ModRegistry.REWARD_RECIPE_TYPE.get());
 			for (RecipeHolder<RewardRecipe> rewardHolder : rewards) {
 				String infoTimerTag = rewardHolder.id().toString();
 				if (hasTag(serverPlayer, infoTimerTag)) {
