@@ -17,7 +17,7 @@ public class RewardUtil {
 			player.displayClientMessage(text, true);
 		} else {
 			MutableComponent chatComponent = Component.literal("[LoyaltyRewards] ").append(text);
-			player.sendSystemMessage(chatComponent);
+			player.displayClientMessage(chatComponent, false);
 		}
 	}
 

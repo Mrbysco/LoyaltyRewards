@@ -19,11 +19,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -76,8 +80,18 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 	}
 
 	@Override
-	public RecipeType<?> getType() {
+	public RecipeType<RewardRecipe> getType() {
 		return ModRegistry.REWARD_RECIPE_TYPE.get();
+	}
+
+	@Override
+	public PlacementInfo placementInfo() {
+		return PlacementInfo.NOT_PLACEABLE;
+	}
+
+	@Override
+	public RecipeBookCategory recipeBookCategory() {
+		return RecipeBookCategories.CRAFTING_MISC;
 	}
 
 	@Override
@@ -87,27 +101,17 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 
 	@Override
 	public ItemStack assemble(RecipeInput input, HolderLookup.Provider registryAccess) {
-		return getResultItem(registryAccess);
-	}
-
-	@Override
-	public ItemStack getResultItem(HolderLookup.Provider registryAccess) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean canCraftInDimensions(int x, int y) {
-		return false;
-	}
-
-	@Override
-	public RecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<RewardRecipe> getSerializer() {
 		return ModRegistry.REWARD_SERIALIZER.get();
 	}
 
 	public void triggerReward(Level level, BlockPos pos, ServerPlayer player) {
-		if (!commands.isEmpty()) {
-			for (String s : commands) {
+		if (!getCommands().isEmpty()) {
+			for (String s : getCommands()) {
 				String rawCommand = s;
 				if (s.startsWith("\"") && s.endsWith("\"")) {
 					rawCommand = rawCommand.substring(1, s.length() - 1);
@@ -127,7 +131,7 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 			}
 		}
 
-		for (ItemStack itemStack : stacks) {
+		for (ItemStack itemStack : getStacks()) {
 			ItemStack stack = itemStack.copy();
 			if (!stack.isEmpty()) {
 				if (player.addItem(stack)) {
@@ -137,7 +141,7 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 					Component text = Component.translatable("loyaltyrewards.inventory.full").withStyle(ChatFormatting.YELLOW);
 					player.sendSystemMessage(text);
 
-					ItemEntity itemEntity = EntityType.ITEM.create(level);
+					ItemEntity itemEntity = EntityType.ITEM.create(level, EntitySpawnReason.EVENT);
 					if (itemEntity != null) {
 						itemEntity.setItem(stack);
 						itemEntity.setPos(pos.getX(), pos.getY() + 0.5, pos.getZ());

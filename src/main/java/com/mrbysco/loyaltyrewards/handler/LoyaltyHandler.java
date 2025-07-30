@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-import java.util.List;
+import java.util.Collection;
 
 public class LoyaltyHandler {
 
@@ -19,7 +19,7 @@ public class LoyaltyHandler {
 		Player player = event.getEntity();
 		Level level = player.level();
 		if (player instanceof ServerPlayer serverPlayer && level.getGameTime() % 20 == 0) {
-			List<RecipeHolder<RewardRecipe>> rewards = level.getRecipeManager().getAllRecipesFor(ModRegistry.REWARD_RECIPE_TYPE.get());
+			Collection<RecipeHolder<RewardRecipe>> rewards = serverPlayer.serverLevel().recipeAccess().recipeMap().byType(ModRegistry.REWARD_RECIPE_TYPE.get());
 			for (RecipeHolder<RewardRecipe> rewardHolder : rewards) {
 				String infoTimerTag = rewardHolder.id().toString();
 				if (hasTag(serverPlayer, infoTimerTag)) {
@@ -58,7 +58,7 @@ public class LoyaltyHandler {
 	public static int getTime(Player player, String valueTag) {
 		CompoundTag playerData = player.getPersistentData();
 		CompoundTag data = getTag(playerData, Player.PERSISTED_NBT_TAG);
-		return data.getInt(valueTag);
+		return data.getIntOr(valueTag, 0);
 	}
 
 	public static boolean hasTag(Player player, String valueTag) {
@@ -71,6 +71,6 @@ public class LoyaltyHandler {
 		if (tag == null || !tag.contains(key)) {
 			return new CompoundTag();
 		}
-		return tag.getCompound(key);
+		return tag.getCompoundOrEmpty(key);
 	}
 }
