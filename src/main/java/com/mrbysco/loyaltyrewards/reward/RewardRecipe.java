@@ -17,6 +17,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -127,7 +128,7 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 					rawCommand = command.replace("@p", player.getName().getString());
 				}
 
-				player.getServer().getCommands().performPrefixedCommand(this.createCommandSourceStack(player, rawCommand), rawCommand);
+				player.level().getServer().getCommands().performPrefixedCommand(this.createCommandSourceStack(player), rawCommand);
 			}
 		}
 
@@ -153,12 +154,12 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 		RewardUtil.sendRewardMessage(player, getTime());
 	}
 
-	private CommandSourceStack createCommandSourceStack(@Nullable ServerPlayer serverPlayer, String command) {
+	private CommandSourceStack createCommandSourceStack(@Nullable ServerPlayer serverPlayer) {
 		MinecraftServer server = serverPlayer.level().getServer();
 		ServerLevel serverLevel = server.overworld();
 		String s = serverPlayer == null ? "LoyaltyReward" : serverPlayer.getName().getString();
-		Component component = (Component) (serverPlayer == null ? Component.literal("LoyaltyReward") : serverPlayer.getDisplayName());
-		return new CommandSourceStack(server, Vec3.atCenterOf(serverPlayer.blockPosition()), Vec2.ZERO, serverLevel, 4,
+		Component component = serverPlayer == null ? Component.literal("LoyaltyReward") : serverPlayer.getDisplayName();
+		return new CommandSourceStack(server, Vec3.atCenterOf(serverPlayer.blockPosition()), Vec2.ZERO, serverLevel, PermissionSet.ALL_PERMISSIONS,
 				s, component, server, serverPlayer);
 	}
 
