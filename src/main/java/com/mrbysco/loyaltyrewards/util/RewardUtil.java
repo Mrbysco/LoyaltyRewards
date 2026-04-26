@@ -14,10 +14,10 @@ public class RewardUtil {
 				.append(secondsToString(totalSeconds));
 
 		if (LoyaltyConfig.SERVER.announceMethod.get() == EnumAnnounceMethod.STATUS) {
-			player.displayClientMessage(text, true);
+			player.sendOverlayMessage(text);
 		} else {
 			MutableComponent chatComponent = Component.literal("[LoyaltyRewards] ").append(text);
-			player.displayClientMessage(chatComponent, false);
+			player.sendSystemMessage(chatComponent);
 		}
 	}
 

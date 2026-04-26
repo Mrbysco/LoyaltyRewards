@@ -1,7 +1,6 @@
 package com.mrbysco.loyaltyrewards.reward;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mrbysco.loyaltyrewards.registry.ModRegistry;
@@ -9,10 +8,9 @@ import com.mrbysco.loyaltyrewards.util.RewardUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -25,6 +23,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategories;
@@ -37,15 +36,45 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class RewardRecipe implements Recipe<RecipeInput> {
+	public static final MapCodec<RewardRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(
+			instance -> instance.group(
+							Codec.INT.optionalFieldOf("time", 60).forGetter(recipe -> recipe.time),
+							Codec.BOOL.optionalFieldOf("repeatable", false).forGetter(recipe -> recipe.repeatable),
+							ItemStackTemplate.CODEC
+									.listOf()
+									.fieldOf("stacks")
+									.forGetter(recipe -> recipe.stacks),
+
+							Codec.STRING
+									.listOf()
+									.fieldOf("commands")
+									.forGetter(recipe -> recipe.commands)
+					)
+					.apply(instance, RewardRecipe::new)
+	);
+	public static final StreamCodec<RegistryFriendlyByteBuf, RewardRecipe> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.INT,
+			o -> o.time,
+			ByteBufCodecs.BOOL,
+			o -> o.repeatable,
+			ItemStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+			o -> o.stacks,
+			ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
+			o -> o.commands,
+			RewardRecipe::new
+	);
+	public static final RecipeSerializer<RewardRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
 	private final int time;
 	private final boolean repeatable;
 
-	private final NonNullList<ItemStack> stacks;
-	private final NonNullList<String> commands;
+	private final List<ItemStackTemplate> stacks;
+	private final List<String> commands;
 
-	public RewardRecipe(int time, boolean repeatable, NonNullList<ItemStack> stacks, NonNullList<String> commands) {
+	public RewardRecipe(int time, boolean repeatable, List<ItemStackTemplate> stacks, List<String> commands) {
 		this.time = time;
 		this.repeatable = repeatable;
 		this.stacks = stacks;
@@ -69,14 +98,14 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 	/**
 	 * @return Returns the list of commands to run when the reward is given
 	 */
-	public NonNullList<String> getCommands() {
+	public List<String> getCommands() {
 		return commands;
 	}
 
 	/**
 	 * @return Returns the list of stacks to give when the reward is given
 	 */
-	public NonNullList<ItemStack> getStacks() {
+	public List<ItemStackTemplate> getStacks() {
 		return stacks;
 	}
 
@@ -101,7 +130,7 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 	}
 
 	@Override
-	public ItemStack assemble(RecipeInput input, HolderLookup.Provider registryAccess) {
+	public ItemStack assemble(RecipeInput input) {
 		return ItemStack.EMPTY;
 	}
 
@@ -132,22 +161,20 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 			}
 		}
 
-		for (ItemStack itemStack : getStacks()) {
-			ItemStack stack = itemStack.copy();
-			if (!stack.isEmpty()) {
-				if (player.addItem(stack)) {
-					player.level().playSound((Player) null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
-							0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-				} else {
-					Component text = Component.translatable("loyaltyrewards.inventory.full").withStyle(ChatFormatting.YELLOW);
-					player.sendSystemMessage(text);
+		for (ItemStackTemplate itemStack : getStacks()) {
+			ItemStack stack = itemStack.create();
+			if (player.addItem(stack)) {
+				player.level().playSound((Player) null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
+						0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+			} else {
+				Component text = Component.translatable("loyaltyrewards.inventory.full").withStyle(ChatFormatting.YELLOW);
+				player.sendSystemMessage(text);
 
-					ItemEntity itemEntity = EntityType.ITEM.create(level, EntitySpawnReason.EVENT);
-					if (itemEntity != null) {
-						itemEntity.setItem(stack);
-						itemEntity.setPos(pos.getX(), pos.getY() + 0.5, pos.getZ());
-						level.addFreshEntity(itemEntity);
-					}
+				ItemEntity itemEntity = EntityType.ITEM.create(level, EntitySpawnReason.EVENT);
+				if (itemEntity != null) {
+					itemEntity.setItem(stack);
+					itemEntity.setPos(pos.getX(), pos.getY() + 0.5, pos.getZ());
+					level.addFreshEntity(itemEntity);
 				}
 			}
 		}
@@ -168,86 +195,13 @@ public class RewardRecipe implements Recipe<RecipeInput> {
 		return true;
 	}
 
-	public static class Serializer implements RecipeSerializer<RewardRecipe> {
+	@Override
+	public boolean showNotification() {
+		return false;
+	}
 
-		public static final MapCodec<RewardRecipe> CODEC = RecordCodecBuilder.mapCodec(
-				instance -> instance.group(
-								Codec.INT.optionalFieldOf("time", 60).forGetter(recipe -> recipe.time),
-								Codec.BOOL.optionalFieldOf("repeatable", false).forGetter(recipe -> recipe.repeatable),
-								ItemStack.STRICT_CODEC
-										.listOf()
-										.fieldOf("stacks")
-										.flatXmap(
-												array -> {
-													ItemStack[] aitemstack = array
-															.toArray(ItemStack[]::new);
-													return DataResult.success(NonNullList.of(ItemStack.EMPTY, aitemstack));
-												},
-												DataResult::success
-										)
-										.forGetter(recipe -> recipe.stacks),
-
-								Codec.STRING
-										.listOf()
-										.fieldOf("commands")
-										.flatXmap(
-												array -> {
-													String[] acommand = array
-															.toArray(String[]::new);
-													return DataResult.success(NonNullList.of("", acommand));
-												},
-												DataResult::success
-										)
-										.forGetter(recipe -> recipe.commands)
-						)
-						.apply(instance, RewardRecipe::new)
-		);
-		public static final StreamCodec<RegistryFriendlyByteBuf, RewardRecipe> STREAM_CODEC = StreamCodec.of(
-				RewardRecipe.Serializer::toNetwork, RewardRecipe.Serializer::fromNetwork
-		);
-
-		@Override
-		public MapCodec<RewardRecipe> codec() {
-			return CODEC;
-		}
-
-		@Override
-		public StreamCodec<RegistryFriendlyByteBuf, RewardRecipe> streamCodec() {
-			return STREAM_CODEC;
-		}
-
-		public static RewardRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-			int itemSize = buffer.readVarInt();
-			NonNullList<ItemStack> resultItems = NonNullList.withSize(itemSize, ItemStack.EMPTY);
-			for (int j = 0; j < resultItems.size(); ++j) {
-				resultItems.set(j, ItemStack.STREAM_CODEC.decode(buffer));
-			}
-
-			int commandSize = buffer.readVarInt();
-			NonNullList<String> resultCommands = NonNullList.withSize(commandSize, "");
-			for (int j = 0; j < resultCommands.size(); ++j) {
-				resultCommands.set(j, buffer.readUtf());
-			}
-
-			boolean repeatable = buffer.readBoolean();
-			int time = buffer.readInt();
-			return new RewardRecipe(time, repeatable, resultItems, resultCommands);
-		}
-
-		public static void toNetwork(RegistryFriendlyByteBuf buffer, RewardRecipe recipe) {
-			buffer.writeVarInt(recipe.stacks.size());
-
-			for (ItemStack stack : recipe.stacks) {
-				ItemStack.STREAM_CODEC.encode(buffer, stack);
-			}
-
-			buffer.writeVarInt(recipe.commands.size());
-
-			for (String command : recipe.commands) {
-				buffer.writeUtf(command);
-			}
-			buffer.writeBoolean(recipe.repeatable);
-			buffer.writeInt(recipe.time);
-		}
+	@Override
+	public String group() {
+		return "";
 	}
 }

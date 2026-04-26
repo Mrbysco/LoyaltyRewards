@@ -5,6 +5,7 @@ import com.mrbysco.loyaltyrewards.reward.RewardRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -15,5 +16,5 @@ public class ModRegistry {
 
 	public static final Supplier<RecipeType<RewardRecipe>> REWARD_RECIPE_TYPE = RECIPE_TYPES.register("reward_recipe", () -> new RecipeType<>() {
 	});
-	public static final Supplier<RewardRecipe.Serializer> REWARD_SERIALIZER = RECIPE_SERIALIZERS.register("reward_recipe", RewardRecipe.Serializer::new);
+	public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<RewardRecipe>> REWARD_SERIALIZER = RECIPE_SERIALIZERS.register("reward_recipe", () -> RewardRecipe.SERIALIZER);
 }
